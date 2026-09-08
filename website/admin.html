@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Cleardrive</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<!-- ===================== SETUP (shown until backend connected) ===================== -->
+<div id="view-setup" class="login-shell" hidden>
+  <div class="login-card" style="max-width:640px;">
+    <span class="eyebrow">One-Time Setup</span>
+    <h1 style="font-size:1.8rem;">Connect your services.</h1>
+    <p>This runs once per deployment. Nothing here is shared with anyone else who buys this template — every copy of the site talks to its own backend.</p>
+
+    <div class="setup-step">
+      <div class="num">1</div>
+      <div>
+        <h3>Create a free Supabase project</h3>
+        <p>At <a href="https://supabase.com" target="_blank" style="color:var(--gold-bright);">supabase.com</a> → New Project (free tier). Takes ~2 minutes to spin up.</p>
+      </div>
+    </div>
+    <div class="setup-step">
+      <div class="num">2</div>
+      <div>
+        <h3>Run the schema</h3>
+        <p>In your project's SQL Editor, paste and run everything in <code class="inline">supabase/schema.sql</code> from this project folder.</p>
+      </div>
+    </div>
+    <div class="setup-step">
+      <div class="num">3</div>
+      <div>
+        <h3>Paste your project keys</h3>
+        <p>Project Settings → API → copy the <strong>Project URL</strong> and <strong>anon public key</strong> below.</p>
+        <div class="field" style="margin-top:12px;">
+          <label for="setup-url">Supabase Project URL</label>
+          <input type="text" id="setup-url" placeholder="https://xxxxx.supabase.co">
+        </div>
+        <div class="field" style="margin-top:12px;">
+          <label for="setup-key">Supabase anon public key</label>
+          <input type="text" id="setup-key" placeholder="eyJhbGciOi...">
+        </div>
+        <button id="setup-save" class="btn btn-primary" style="margin-top:16px;">Save &amp; Connect</button>
+        <p id="setup-status" class="form-status"></p>
+      </div>
+    </div>
+    <div class="setup-step">
+      <div class="num">4</div>
+      <div>
+        <h3>Make yourself an admin</h3>
+        <p>Sign up for an account on the live site's <code class="inline">account.html</code> page first, then in Supabase's SQL Editor run:</p>
+        <p><code class="inline">insert into admin_users (id) select id from auth.users where email = 'you@example.com';</code></p>
+      </div>
+    </div>
+    <div class="setup-step">
+      <div class="num">5</div>
+      <div>
+        <h3>Optional: turn on payments &amp; AI</h3>
+        <p>See <code class="inline">SETUP.md</code> for the two Edge Functions (Stripe checkout, AI assistant) — each is a couple of terminal commands, both free to run at this scale.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== LOGIN (shown once connected, until signed in as admin) ===================== -->
+<div id="view-login" class="login-shell" hidden>
+  <div class="login-card">
+    <span class="eyebrow">Admin</span>
+    <h1 style="font-size:1.8rem;">Sign in.</h1>
+    <form id="login-form">
+      <div class="field" style="margin-bottom:14px;">
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" required>
+      </div>
+      <div class="field" style="margin-bottom:14px;">
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+      <p id="login-status" class="form-status"></p>
+    </form>
+    <p style="margin-top:16px; font-size:0.8rem;">No account yet? Create one on <a href="account.html" style="color:var(--gold-bright);">account.html</a>, then ask an existing admin to add you (see Setup step 4).</p>
+    <p style="margin-top:8px;"><button id="reset-backend" class="btn btn-ghost" style="font-size:0.7rem; padding:8px 14px;">Reconnect a different Supabase project</button></p>
+  </div>
+</div>
+
+<!-- ===================== ADMIN APP (shown once signed in AND confirmed admin) ===================== -->
+<div id="view-app" class="admin-shell" hidden>
+  <aside class="admin-sidebar">
+    <div class="logo">
+      <span class="logo-word" style="font-size:1.1rem;">CLEARDRIVE</span>
+      <div style="font-size:0.7rem; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase; margin-top:2px;">Admin</div>
+    </div>
+    <button class="admin-tab active" data-tab="dashboard">Dashboard</button>
+    <button class="admin-tab" data-tab="vehicles">Vehicles</button>
+    <button class="admin-tab" data-tab="testimonials">Testimonials</button>
+    <button class="admin-tab" data-tab="enquiries">Enquiries</button>
+    <button class="admin-tab" data-tab="reservations">Reservations</button>
+    <button class="admin-tab" data-tab="settings">Site Settings</button>
+    <button class="admin-tab" data-tab="services">Services</button>
+    <div style="padding:var(--space-3);">
+      <a href="index.html" target="_blank" class="btn btn-ghost btn-block" style="margin-bottom:8px;">View Site ↗</a>
+      <button id="logout-btn" class="btn btn-ghost btn-block">Sign Out</button>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+
+    <section id="panel-dashboard" class="admin-panel active">
+      <div class="admin-topbar"><h2>Dashboard</h2></div>
+      <div class="grid grid-4">
+        <div class="card"><div class="eyebrow">Vehicles Listed</div><h3 id="stat-vehicles" style="font-size:2rem;">–</h3></div>
+        <div class="card"><div class="eyebrow">New Enquiries</div><h3 id="stat-enquiries" style="font-size:2rem;">–</h3></div>
+        <div class="card"><div class="eyebrow">Pending Reservations</div><h3 id="stat-reservations" style="font-size:2rem;">–</h3></div>
+        <div class="card"><div class="eyebrow">Published Reviews</div><h3 id="stat-testimonials" style="font-size:2rem;">–</h3></div>
+      </div>
+    </section>
+
+    <section id="panel-vehicles" class="admin-panel">
+      <div class="admin-topbar"><h2>Vehicles</h2><button class="btn btn-primary" data-open-modal="vehicle">+ Add Vehicle</button></div>
+      <table class="data-table"><thead><tr><th>Make / Model</th><th>Year</th><th>Price</th><th>Status</th><th></th></tr></thead><tbody id="vehicles-body"></tbody></table>
+    </section>
+
+    <section id="panel-testimonials" class="admin-panel">
+      <div class="admin-topbar"><h2>Testimonials</h2><button class="btn btn-primary" data-open-modal="testimonial">+ Add Testimonial</button></div>
+      <table class="data-table"><thead><tr><th>Client</th><th>Vehicle</th><th>Published</th><th></th></tr></thead><tbody id="testimonials-body"></tbody></table>
+    </section>
+
+    <section id="panel-enquiries" class="admin-panel">
+      <div class="admin-topbar"><h2>Enquiries</h2></div>
+      <table class="data-table"><thead><tr><th>Name</th><th>Make / Model</th><th>Contact</th><th>Status</th><th></th></tr></thead><tbody id="enquiries-body"></tbody></table>
+    </section>
+
+    <section id="panel-reservations" class="admin-panel">
+      <div class="admin-topbar"><h2>Reservations</h2></div>
+      <p class="form-note">Stripe is in test mode with no webhook wired up — check the Stripe dashboard for the matching payment, then mark it Paid here.</p>
+      <table class="data-table" style="margin-top:16px;"><thead><tr><th>Vehicle</th><th>Amount</th><th>Status</th><th></th></tr></thead><tbody id="reservations-body"></tbody></table>
+    </section>
+
+    <section id="panel-settings" class="admin-panel">
+      <div class="admin-topbar"><h2>Site Settings</h2></div>
+      <div class="card" style="max-width:520px;">
+        <form id="settings-form">
+          <div class="field" style="margin-bottom:14px;"><label>Brand Name</label><input type="text" name="brand_name"></div>
+          <div class="field" style="margin-bottom:14px;"><label>Owner Names</label><input type="text" name="owner_names"></div>
+          <div class="field" style="margin-bottom:14px;"><label>Email</label><input type="email" name="email"></div>
+          <div class="field" style="margin-bottom:14px;"><label>Phone (display)</label><input type="text" name="phone_display" placeholder="+44 00 0000 0000"></div>
+          <div class="field" style="margin-bottom:14px;"><label>Phone (digits only, for tel/whatsapp links)</label><input type="text" name="phone_intl" placeholder="447..."></div>
+          <div class="field" style="margin-bottom:14px;"><label>WhatsApp (digits only)</label><input type="text" name="whatsapp_intl" placeholder="447..."></div>
+          <div class="field" style="margin-bottom:14px;"><label>Address</label><input type="text" name="address"></div>
+          <button type="submit" class="btn btn-primary">Save Settings</button>
+          <p id="settings-status" class="form-status"></p>
+        </form>
+      </div>
+    </section>
+
+    <section id="panel-services" class="admin-panel">
+      <div class="admin-topbar"><h2>Services</h2></div>
+      <div class="grid grid-3">
+        <div class="card">
+          <h3>Database</h3>
+          <p class="status-dot ok">Connected</p>
+        </div>
+        <div class="card">
+          <h3>Payments (Stripe)</h3>
+          <p id="service-stripe" class="status-dot off">Checking…</p>
+          <p style="font-size:0.8rem;">Set <code class="inline">STRIPE_SECRET_KEY</code> as a Supabase secret and deploy the <code class="inline">stripe-checkout</code> function — see SETUP.md.</p>
+        </div>
+        <div class="card">
+          <h3>AI Assistant</h3>
+          <p id="service-ai" class="status-dot off">Checking…</p>
+          <p style="font-size:0.8rem;">Set <code class="inline">GEMINI_API_KEY</code> as a Supabase secret and deploy the <code class="inline">ai-proxy</code> function — see SETUP.md.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ===================== Modals ===================== -->
+<div id="modal-vehicle" class="modal-overlay" hidden>
+  <div class="modal-box">
+    <h3>Vehicle</h3>
+    <form id="vehicle-form">
+      <input type="hidden" name="id">
+      <div class="form-grid">
+        <div class="field"><label>Make</label><input type="text" name="make" required></div>
+        <div class="field"><label>Model</label><input type="text" name="model" required></div>
+        <div class="field"><label>Year</label><input type="number" name="year"></div>
+        <div class="field"><label>Mileage</label><input type="number" name="mileage"></div>
+        <div class="field"><label>Spec</label><input type="text" name="spec"></div>
+        <div class="field"><label>Price (GBP)</label><input type="number" name="price_gbp"></div>
+        <div class="field"><label>Status</label>
+          <select name="status"><option value="available">Available</option><option value="reserved">Reserved</option><option value="sold">Sold</option></select>
+        </div>
+        <div class="field"><label>Photo URL</label><input type="text" name="photo_url" placeholder="https://..."></div>
+        <div class="field full"><label>Description</label><textarea name="description"></textarea></div>
+      </div>
+      <div style="margin-top:12px;"><button type="button" id="vehicle-ai-draft" class="btn btn-ghost">✦ Draft description with AI</button></div>
+      <div class="hero-actions" style="margin-top:20px;">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="button" class="btn btn-ghost" data-close-modal>Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="modal-testimonial" class="modal-overlay" hidden>
+  <div class="modal-box">
+    <h3>Testimonial</h3>
+    <form id="testimonial-form">
+      <input type="hidden" name="id">
+      <div class="field" style="margin-bottom:14px;"><label>Client Name</label><input type="text" name="client_name" required></div>
+      <div class="field" style="margin-bottom:14px;"><label>Vehicle Purchased</label><input type="text" name="vehicle_purchased"></div>
+      <div class="field" style="margin-bottom:14px;"><label>Photo URL</label><input type="text" name="photo_url" placeholder="https://..."></div>
+      <div class="field" style="margin-bottom:14px;"><label>Quote</label><textarea name="quote" required></textarea></div>
+      <div class="field" style="margin-bottom:14px;"><label><input type="checkbox" name="is_published" style="width:auto; display:inline-block;"> Published on site</label></div>
+      <div class="hero-actions">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="button" class="btn btn-ghost" data-close-modal>Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="modal-reply" class="modal-overlay" hidden>
+  <div class="modal-box">
+    <h3>Draft a reply</h3>
+    <p style="font-size:0.85rem;">Generated by AI — edit before sending. Nothing is sent automatically; copy it into WhatsApp or email.</p>
+    <textarea id="reply-text" style="width:100%; min-height:160px; background:var(--bg-alt); border:1px solid var(--border-strong); color:var(--ivory); border-radius:4px; padding:12px; font-family:var(--font-body);"></textarea>
+    <div class="hero-actions" style="margin-top:16px;">
+      <button type="button" class="btn btn-ghost" data-close-modal>Close</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="assets/js/supabase-client.js"></script>
+<script src="assets/js/admin.js"></script>
+</body>
+</html>
