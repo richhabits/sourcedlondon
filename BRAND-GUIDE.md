@@ -37,9 +37,18 @@ This pairing was chosen deliberately to differentiate from escalux.co.uk, which 
 
 Deliberately closer to charcoal/ivory/brass than Escalux's black/navy — softer and warmer, so it reads as "sales trust" rather than "chauffeur exclusivity."
 
+## Marque Logos — Real, But a Real Trademark Risk
+
+The "Marques We Source" section (Home + Vehicles) now shows real manufacturer logos, sourced from Wikimedia Commons (see `CREDITS.md` for the exact source/license of each file) — not fabricated marks. This is not risk-free, and the risk is genuine, not hypothetical:
+
+- Manufacturer logos are trademarks. Using them without the owner's authorization requires care — UK motor-trade legal guidance (Lawgistics) confirms this directly, and cites **Aston Martin's solicitors actively sending takedown demands** to non-authorized businesses using the Aston Martin wings mark.
+- Real independent brokers (e.g. Lawrence Smith, a genuine UK car sourcing consultant) do display real logos to show what they deal in — this is common practice, not unusual.
+- The mitigation that matters: (1) never phrase the copy as if a manufacturer endorses or partners with Sourced London — "Exclusive Access" and "direct trade relationships" describe **Dre's personal connections**, not the brand's sanction, and (2) the disclaimer line under the logos ("independent... not an authorized dealer for, affiliated with, or endorsed by...") is load-bearing, not decorative — don't remove it if you keep the logos.
+- If any manufacturer's legal team ever objects, the fix is simple and low-drama: remove that one logo (swap back to a text badge, same `.marque-badge` CSS class still exists in `style.css`). It is not a lawsuit-grade risk at this stage — it's a "receive a letter, comply, move on" risk — but it is real enough that Romeo/Dre should know it exists rather than assume logos are automatically fine to use.
+
 ## Photography — Do's and Don'ts
 
-No real vehicle photography exists yet, so every image slot on the site is a clearly-labelled placeholder ("Vehicle photo to be added"). When real photos are ready:
+The homepage hero now uses a real photo (`website/assets/img/photos/hero-night-sedan.jpg`, Unsplash License, see `CREDITS.md`) — a mood/brand shot, not a stand-in for real inventory. No vehicle photography exists yet, so every vehicle/testimonial image slot stays a clearly-labelled placeholder ("Vehicle photo to be added") until real photos exist. When real photos are ready:
 
 **Do:**
 - Shoot at golden hour or in even overcast light — avoid harsh midday shadows on paintwork.

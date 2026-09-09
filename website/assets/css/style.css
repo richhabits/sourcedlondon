@@ -143,8 +143,11 @@ section{ padding:var(--space-7) 0; }
 .hero{
   min-height:86vh; display:flex; align-items:center;
   background:
-    radial-gradient(ellipse at 70% 20%, rgba(185,154,91,0.10), transparent 55%),
-    linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 100%);
+    radial-gradient(ellipse at 70% 20%, rgba(185,154,91,0.14), transparent 55%),
+    linear-gradient(100deg, var(--bg) 0%, var(--bg) 42%, rgba(11,11,13,0.72) 68%, rgba(11,11,13,0.4) 100%),
+    url("../img/photos/hero-night-sedan.jpg");
+  background-size:cover;
+  background-position:center 35%;
   border-bottom:1px solid var(--border);
   position:relative; overflow:hidden;
 }
@@ -364,6 +367,20 @@ a.marque-badge:hover{ border-color:var(--gold); color:var(--gold-bright); transf
 .marque-badge.exclusive{ border-color:var(--gold-dim); color:var(--gold-bright); background:rgba(185,154,91,0.06); }
 .marque-badge.exclusive .spark{ color:var(--gold); }
 .marque-group-label{ font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:10px; display:block; }
+
+.marque-logo-chip{
+  display:inline-flex; align-items:center; justify-content:center; position:relative;
+  background:var(--ivory); border-radius:8px; padding:10px 18px; height:52px;
+  border:1px solid var(--border-strong);
+  transition:transform .2s var(--ease), border-color .2s var(--ease);
+}
+.marque-logo-chip:hover{ transform:translateY(-2px); border-color:var(--gold); }
+.marque-logo-chip img{ height:100%; width:auto; max-width:96px; object-fit:contain; }
+.marque-logo-chip.exclusive{ box-shadow:0 0 0 1px var(--gold-dim); }
+.marque-logo-chip .exclusive-mark{ position:absolute; top:-8px; right:-8px; width:20px; height:20px; border-radius:50%; background:var(--gold); color:#141414; font-size:0.65rem; display:flex; align-items:center; justify-content:center; }
+.marque-caption{ font-size:0.68rem; color:var(--muted); text-align:center; margin-top:6px; }
+.marque-item{ display:flex; flex-direction:column; align-items:center; }
+.marque-disclaimer{ font-size:0.75rem; color:var(--muted); margin-top:var(--space-3); max-width:640px; }
 
 /* ---------- Process steps (numbered) ---------- */
 .process-row{ display:flex; gap:var(--space-3); overflow-x:auto; padding-bottom:8px; }

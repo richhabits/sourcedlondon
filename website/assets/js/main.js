@@ -33,6 +33,17 @@ document.addEventListener("DOMContentLoaded", () => {
     el.textContent = new Date().getFullYear();
   });
 
+  // ---- Marque logo fallback: if a logo file is missing, show its name as text instead ----
+  document.querySelectorAll(".marque-logo-chip img").forEach((img) => {
+    img.addEventListener("error", () => {
+      const chip = img.closest(".marque-logo-chip");
+      const label = document.createElement("span");
+      label.textContent = img.alt;
+      label.style.cssText = "color:#141414; font-size:0.8rem; font-weight:600; white-space:nowrap;";
+      chip.replaceChildren(label);
+    });
+  });
+
   // ---- Mobile nav toggle ----
   const navToggle = document.querySelector(".nav-toggle");
   const navLinks = document.querySelector(".nav-links");

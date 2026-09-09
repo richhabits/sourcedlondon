@@ -8,3 +8,4 @@ supabase/.branches/
 .vscode/
 .idea/
 *.log
+graphify-out/
