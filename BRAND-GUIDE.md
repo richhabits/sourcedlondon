@@ -1,10 +1,10 @@
-# Sourced London — Brand Guide (working draft)
+# Sourced London — Brand Guide
 
-Working name: **Sourced London**. Everything here is built to be renamed in ~10 minutes once you confirm the real brand name — see "How to rename" at the bottom.
+**Sourced London** is the live, deployed name — the GitHub repo, the Vercel URL (sourcedlondon.vercel.app), and every page on the site all use it. It started as a working placeholder and has since become the real one in active use; if it ever changes, "How to rename" at the bottom still applies, now updated for the full current file list.
 
 ## Logo
 
-The site currently ships with a **text wordmark** ("SOURCED LONDON" set in Fraunces, a quiet-luxury serif) plus a small diamond/chevron mark — no paid logo generation was used, so there's nothing to swap out or pay for later.
+The site currently ships with a **text wordmark** ("SOURCED LONDON" set in Bodoni Moda, a high-contrast didone serif — see Typography below) plus a small faceted gold diamond mark — no paid logo generation was used, so there's nothing to swap out or pay for later. Dre has a real logo in progress to replace this; until that file exists, this mark stays as-is (see "How to swap the logo" below).
 
 **Do:**
 - Keep generous clear space around the logo (at least the height of the mark on all sides).
@@ -16,7 +16,9 @@ The site currently ships with a **text wordmark** ("SOURCED LONDON" set in Fraun
 - Don't pair it with a second display font anywhere on the site.
 - Don't place it over busy photography without a dark scrim behind it.
 
-When you have a real logo file, drop it at `website/assets/img/logo.svg` and replace the inline SVG diamond + `<span class="logo-word">` in each page's header with an `<img>` tag pointing at it — one find/replace across the 5 HTML files.
+## How to swap the logo once Dre's real file arrives
+
+Drop it at `website/assets/img/logo.svg` (or `.png`), then replace the inline SVG diamond + `<span class="logo-word">` in each page's header (and the matching pair in each footer, where present) with an `<img>` tag pointing at it. This appears in every public page's header — `index.html`, `vehicles.html`, `sell.html`, `about.html`, `reviews.html`, `contact.html`, `account.html`, `app.html`, `privacy.html`, `terms.html`, `404.html` — plus the sidebar wordmark in `admin.html` (text-only there, no diamond to swap). Do this as one careful find/replace across the list above, not page-by-page by hand.
 
 ## Typography
 
@@ -48,7 +50,7 @@ The "Marques We Source" section (Home + Vehicles) now shows real manufacturer lo
 
 ## Photography — Do's and Don'ts
 
-The homepage hero now uses a real photo (`website/assets/img/photos/hero-night-sedan.jpg`, Unsplash License, see `CREDITS.md`) — a mood/brand shot, not a stand-in for real inventory. No vehicle photography exists yet, so every vehicle/testimonial image slot stays a clearly-labelled placeholder ("Vehicle photo to be added") until real photos exist. When real photos are ready:
+The homepage hero now uses a real photo (`website/assets/img/photos/hero-night-sedan.webp`, Unsplash License, see `CREDITS.md`) — a mood/brand shot, not a stand-in for real inventory. The same photo is re-exported at 1200×630 as `og-share.jpg` for social/WhatsApp link previews. No vehicle photography exists yet, so every vehicle/testimonial image slot stays a clearly-labelled placeholder ("Vehicle photo to be added") until real photos exist. When real photos are ready:
 
 **Do:**
 - Shoot at golden hour or in even overcast light — avoid harsh midday shadows on paintwork.
@@ -65,9 +67,11 @@ The homepage hero now uses a real photo (`website/assets/img/photos/hero-night-s
 
 Sophisticated, direct, low-pressure. Short sentences. No exclamation marks, no "amazing deals," no countdown urgency. The copy currently on the site (`website/*.html`) is written in this voice — keep new copy consistent with it rather than reverting to generic dealership language.
 
-## How to rename once the brand name is confirmed
+## How to rename, if it ever changes
 
-1. Find/replace `Sourced London` → new name across `website/*.html` and `README.md`.
-2. Update `<title>` and `<meta name="description">` tags in each page's `<head>`.
-3. Update `brandName` in `website/assets/js/main.js`.
-4. If the new name changes the "quiet luxury" fit of Fraunces/gold, re-run this brief through the `ui-ux-pro-max` or `design` skill with the new name for a fresh palette/type check before committing to it site-wide.
+1. Find/replace `Sourced London` → new name across `website/*.html`, `README.md`, `SETUP.md`, `DEMO.md`, and `CREDITS.md`.
+2. Update `<title>`, `<meta name="description">`, and the OG/Twitter block in each page's `<head>`.
+3. Update `brandName` in `website/assets/js/main.js` (the fallback config other scripts read from).
+4. Update every `sourcedlondon.vercel.app` / `sourcedlondon.example` URL in `website/robots.txt` and `website/sitemap.xml` — these use plain string URLs, not the `data-cfg` system, so they don't update themselves.
+5. Update the GitHub repo name and Vercel project name to match, or the URLs above will point at the old name.
+6. If the new name changes the "quiet luxury" fit of Bodoni Moda/brass, re-run this brief through the `ui-ux-pro-max` or `design` skill with the new name for a fresh palette/type check before committing to it site-wide.

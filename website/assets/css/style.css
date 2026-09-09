@@ -357,6 +357,10 @@ code.inline{ background:var(--surface-2); padding:2px 6px; border-radius:3px; fo
 
 /* ---------- Marques strip ---------- */
 .marque-row{ display:flex; flex-wrap:wrap; gap:12px; margin-bottom:var(--space-3); }
+/* .marque-badge and .spark below are currently unused in markup (the strip uses real logos
+   via .marque-logo-chip instead) — kept intentionally as the documented rollback path in
+   BRAND-GUIDE.md if a manufacturer ever objects to a specific logo: swap that one <img> back
+   to a plain text badge using this class, no CSS to write. Not dead code — don't remove. */
 .marque-badge{
   display:inline-flex; align-items:center; gap:8px; padding:10px 20px;
   border:1px solid var(--border-strong); border-radius:30px; font-family:var(--font-body);
