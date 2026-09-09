@@ -1,12 +1,21 @@
-# Sourced London — App (early scaffold)
+# Sourced London — App
 
-**Status: not yet built.** This is a real, working [Expo](https://expo.dev) (React Native) starter — the same template `create-expo-app` gives anyone — with no Sourced London-specific code in it yet. It runs, but it's the blank default screen, not a feature.
+**Status: real, working v0.1.** This connects to the exact same Supabase project as the website — same
+tables, same self-serve architecture, no keys baked in, no mock data. Bundles clean for iOS, Android,
+and web (verified with `expo export`).
 
-This exists because `website/app.html` promises an app is "in development." This folder is that development's actual starting point, kept honest: nothing here claims to be a finished feature until it is one.
+## What's built
 
-## Why Expo / React Native
-
-One codebase covers iOS, Android, and web, which matches the "all devices" brief without maintaining three separate native apps. Free and open source — no paid tooling required to build or ship.
+- **Setup screen** — paste your Supabase Project URL + anon key, tested live before it's saved (same
+  pattern as `admin.html`'s setup wizard). Stored on-device via `AsyncStorage`, never hardcoded.
+- **Vehicles** — pulls `status = 'available'` rows from the real `vehicles` table, pull-to-refresh,
+  matches whatever's added in Admin → Vehicles on the website. Empty state when there's nothing listed
+  yet — no placeholder cars.
+- **Vehicle detail** — full spec, price (or POA), description, photo.
+- **Enquire** — writes straight into the real `enquiries` table (`lead_type: 'purchase'`), the same one
+  the website's contact form uses — enquiries show up in Admin → Enquiries either way.
+- Branded with the real design tokens from `../BRAND-GUIDE.md` (charcoal/ivory/brass) and the real
+  typefaces (Bodoni Moda + Manrope, via `@expo-google-fonts`) — not system-font placeholders.
 
 ## Run it
 
@@ -15,18 +24,35 @@ cd app
 npm run ios      # or: npm run android / npm run web
 ```
 
-## What's actually planned (see website/app.html for the public-facing version)
+First launch shows the Setup screen. Point it at the same Supabase project `SETUP.md` walks through for
+the website — nothing extra to configure.
 
-- Saved search alerts (push notifications)
-- Digital garage (owned/reserved vehicle history)
-- Camera-based reg lookup (reuses the `vehicle-lookup` Edge Function already live on the website)
-- In-app messaging (reuses the `messages` table already live on the website)
-- One-tap reservations (reuses `stripe-checkout`)
+## What's genuinely not built yet
 
-Note the pattern: every planned app feature maps to backend work **that already exists** in `supabase/`. The app's job is a native UI on top of it, not a second backend — connect it to the same Supabase project the website uses (see `../SETUP.md`), don't stand up a separate one.
+These were the original pitch items in `website/app.html` — none of them are faked, they're just not
+here yet:
 
-## Before writing real features
+- Push notifications for saved-search alerts
+- Digital garage (owned/reserved vehicle history) — needs the `saved_vehicles` table wired in, which
+  already exists in `supabase/schema.sql`
+- Camera-based reg lookup (reuses the `vehicle-lookup` Edge Function, already live)
+- In-app messaging (reuses the `messages` table, already live)
+- One-tap reservations via `stripe-checkout` (already live on the website, not yet wired into the app)
+- Customer sign-in (the app currently enquires anonymously, like a logged-out website visitor; the
+  `account.html` login flow hasn't been ported over)
+- Native app icons/splash screen — still Expo's defaults in `assets/`
+- App Store / Play Store submission — needs a real Apple Developer / Google Play account, which is a
+  cost decision for whoever owns the deployment, not something to assume
 
-- Read `AGENTS.md` in this folder first — Expo's SDK moves fast; check versioned docs before assuming an API still works as remembered.
-- Wire branding (colors, fonts from `../BRAND-GUIDE.md`) before building screens, not after.
-- This folder has its own `.gitignore` (handles `node_modules/`, `.expo/`, and native signing credentials like `*.jks`/`*.mobileprovision` — never commit those).
+## Why this is a real add-on, not a stretch goal
+
+Every screen here is a thin native UI over backend work that's already shipped and tested on the
+website — same tables, same RLS, same Edge Functions. There's no second backend to build or maintain;
+extending it is UI work, which is what makes it a realistic paid add-on rather than a second project.
+
+## Before writing more features
+
+- Read `AGENTS.md` in this folder first — Expo's SDK moves fast; check versioned docs before assuming
+  an API still works as remembered.
+- This folder has its own `.gitignore` (handles `node_modules/`, `.expo/`, and native signing
+  credentials like `*.jks`/`*.mobileprovision` — never commit those).
