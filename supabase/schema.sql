@@ -53,6 +53,7 @@ create table if not exists public.admin_users (
 create table if not exists public.enquiries (
   id uuid primary key default gen_random_uuid(),
   user_id uuid references auth.users(id) on delete set null,
+  lead_type text not null default 'purchase' check (lead_type in ('purchase','sell','app_waitlist')),
   name text not null,
   email text not null,
   phone text,
@@ -60,14 +61,11 @@ create table if not exists public.enquiries (
   model text,
   budget text,
   message text,
+  vehicle_reg text,
+  lookup_data jsonb,
   status text not null default 'new' check (status in ('new','contacted','won','lost')),
   created_at timestamptz not null default now()
 );
-
--- Added for the "Sell / Part-Exchange Your Car" funnel and reg-plate lookups.
-alter table public.enquiries add column if not exists lead_type text not null default 'purchase' check (lead_type in ('purchase','sell'));
-alter table public.enquiries add column if not exists vehicle_reg text;
-alter table public.enquiries add column if not exists lookup_data jsonb;
 
 -- Customer-added links/notes about vehicles they've spotted elsewhere (Autotrader, etc.)
 create table if not exists public.customer_links (

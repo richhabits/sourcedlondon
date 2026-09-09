@@ -309,6 +309,9 @@ $("#testimonial-form")?.addEventListener("submit", async (e) => {
 });
 
 /* ---------- Enquiries ---------- */
+const LEAD_TYPE_LABELS = { purchase: "Buying", sell: "Selling", app_waitlist: "App Waitlist" };
+const LEAD_TYPE_BADGES = { purchase: "badge-won", sell: "badge-pending", app_waitlist: "badge-reserved" };
+
 async function loadEnquiries() {
   const { data } = await supabase.from("enquiries").select("*").order("created_at", { ascending: false });
   const body = $("#enquiries-body");
@@ -316,7 +319,7 @@ async function loadEnquiries() {
     .map(
       (e) => `
     <tr data-id="${e.id}">
-      <td><span class="badge ${e.lead_type === "sell" ? "badge-pending" : "badge-won"}">${e.lead_type === "sell" ? "Selling" : "Buying"}</span></td>
+      <td><span class="badge ${LEAD_TYPE_BADGES[e.lead_type] || "badge-won"}">${LEAD_TYPE_LABELS[e.lead_type] || "Buying"}</span></td>
       <td>${esc(e.name)}</td>
       <td>${esc([e.make, e.model].filter(Boolean).join(" ") || "–")}${e.vehicle_reg ? `<br><span style="color:var(--muted); font-size:0.75rem;">Reg: ${esc(e.vehicle_reg)}</span>` : ""}</td>
       <td>${esc(e.email)}<br><span style="color:var(--muted);">${esc(e.phone || "")}</span></td>
