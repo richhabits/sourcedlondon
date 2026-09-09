@@ -61,8 +61,10 @@ supabase/
     stripe-checkout/     Edge Function: creates a Stripe Checkout session (test mode by default)
     vehicle-lookup/      Edge Function: DVLA tax/MOT status + DVSA full MOT history by reg plate
 
-app/                    Real Expo (React Native) scaffold for the future native app —
-                         iOS + Android + web from one codebase, not a mockup. See app/README.md.
+app/                    Real Expo (React Native) app, v0.1 — iOS + Android + web from one
+                         codebase. Live vehicle list, vehicle detail, and enquiry form, wired
+                         to the same self-serve Supabase backend as the website. See app/README.md
+                         for what's built vs. what's still a paid add-on to develop further.
 
 SETUP.md        Step-by-step activation guide — start here to go live for real
 BRAND-GUIDE.md  Logo, type, color, photography/logo trademark do's/don'ts
