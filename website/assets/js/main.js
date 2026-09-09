@@ -1,11 +1,11 @@
 /* =========================================================
-   CLEARDRIVE — site config + behaviour
+   SOURCED LONDON — site config + behaviour
    Edit CONFIG below once you have real contact details.
    Everything on the site reads from this single object.
    ========================================================= */
-window.CLEARDRIVE_CONFIG = {
-  brandName: "Cleardrive", // working name — swap when confirmed
-  email: "enquiries@cleardrive.example", // TBC — replace with real inbox
+window.SOURCEDLONDON_CONFIG = {
+  brandName: "Sourced London",
+  email: "enquiries@sourcedlondon.example", // TBC — replace with real inbox
   phoneDisplay: "+44 00 0000 0000", // TBC — replace with the number you'll use for the business
   phoneIntl: "440000000000", // digits only, no + or spaces, for tel: / wa.me links
   whatsappIntl: "440000000000", // joint business WhatsApp number, digits only
@@ -14,7 +14,7 @@ window.CLEARDRIVE_CONFIG = {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-  const cfg = window.CLEARDRIVE_CONFIG;
+  const cfg = window.SOURCEDLONDON_CONFIG;
 
   // ---- Inject contact placeholders wherever data-cfg is used ----
   document.querySelectorAll("[data-cfg]").forEach((el) => {
@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       const data = Object.fromEntries(new FormData(enquiryForm).entries());
       const lines = [
-        `New Cleardrive enquiry`,
+        `New Sourced London enquiry`,
         `Name: ${data.name || "-"}`,
         `Phone: ${data.phone || "-"}`,
         `Email: ${data.email || "-"}`,
@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (sendVia === "email") {
         window.location.href = `mailto:${cfg.email}?subject=${encodeURIComponent(
-          "Cleardrive vehicle enquiry"
+          "Sourced London vehicle enquiry"
         )}&body=${text}`;
       } else {
         window.open(`https://wa.me/${cfg.whatsappIntl}?text=${text}`, "_blank");

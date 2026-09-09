@@ -15,13 +15,13 @@ document.getElementById("sell-lookup")?.addEventListener("click", async () => {
     status.textContent = "Enter a registration first.";
     return;
   }
-  if (!window.Cleardrive || !window.Cleardrive.isBackendConfigured()) {
+  if (!window.SourcedLondon || !window.SourcedLondon.isBackendConfigured()) {
     status.textContent = "Reg checking isn't set up yet — you can still fill in the form manually.";
     return;
   }
   status.textContent = "Checking…";
   try {
-    const data = await window.Cleardrive.callEdgeFunction("vehicle-lookup", { registration: reg });
+    const data = await window.SourcedLondon.callEdgeFunction("vehicle-lookup", { registration: reg });
     lastLookup = data;
     if (data.make) document.getElementById("sell-make").value = data.make;
     const lines = [
@@ -58,7 +58,7 @@ document.getElementById("sell-form")?.addEventListener("submit", async (e) => {
   const sendVia = e.submitter ? e.submitter.dataset.send : "whatsapp";
   const status = document.getElementById("sell-form-status");
 
-  const supabase = window.Cleardrive?.getSupabase();
+  const supabase = window.SourcedLondon?.getSupabase();
   if (supabase) {
     const { data: userData } = await supabase.auth.getUser();
     await supabase.from("enquiries").insert({
@@ -69,7 +69,7 @@ document.getElementById("sell-form")?.addEventListener("submit", async (e) => {
   }
 
   const lines = [
-    `New Cleardrive SELL enquiry`,
+    `New Sourced London SELL enquiry`,
     `Name: ${payload.name}`,
     `Phone: ${payload.phone}`,
     `Email: ${payload.email}`,
@@ -79,10 +79,10 @@ document.getElementById("sell-form")?.addEventListener("submit", async (e) => {
     `Message: ${payload.message || "-"}`,
   ];
   const text = encodeURIComponent(lines.join("\n"));
-  const cfg = window.CLEARDRIVE_CONFIG || {};
+  const cfg = window.SOURCEDLONDON_CONFIG || {};
 
   if (sendVia === "email" && cfg.email) {
-    window.location.href = `mailto:${cfg.email}?subject=${encodeURIComponent("Sell my car — Cleardrive")}&body=${text}`;
+    window.location.href = `mailto:${cfg.email}?subject=${encodeURIComponent("Sell my car — Sourced London")}&body=${text}`;
   } else if (cfg.whatsappIntl) {
     window.open(`https://wa.me/${cfg.whatsappIntl}?text=${text}`, "_blank");
   }

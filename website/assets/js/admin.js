@@ -1,5 +1,5 @@
 /* =========================================================
-   Cleardrive admin panel logic.
+   Sourced London admin panel logic.
    Views: #view-setup -> #view-login -> #view-app
    ========================================================= */
 
@@ -9,11 +9,11 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 let supabase = null;
 
 async function boot() {
-  if (!window.Cleardrive.isBackendConfigured()) {
+  if (!window.SourcedLondon.isBackendConfigured()) {
     showView("setup");
     return;
   }
-  supabase = window.Cleardrive.getSupabase();
+  supabase = window.SourcedLondon.getSupabase();
   if (!supabase) {
     showView("setup");
     return;
@@ -66,14 +66,14 @@ $("#setup-save")?.addEventListener("click", () => {
     status.classList.add("visible", "err");
     return;
   }
-  window.Cleardrive.setBackendConfig({ url, anonKey });
+  window.SourcedLondon.setBackendConfig({ url, anonKey });
   status.textContent = "Connected. Loading...";
   status.classList.add("visible", "ok");
   setTimeout(() => window.location.reload(), 600);
 });
 
 $("#reset-backend")?.addEventListener("click", () => {
-  window.Cleardrive.clearBackendConfig();
+  window.SourcedLondon.clearBackendConfig();
   window.location.reload();
 });
 
@@ -208,7 +208,7 @@ $("#vehicle-ai-draft")?.addEventListener("click", async () => {
   const btn = $("#vehicle-ai-draft");
   btn.textContent = "Drafting…";
   try {
-    const res = await window.Cleardrive.callEdgeFunction("ai-proxy", { prompt: specs, mode: "admin_listing" });
+    const res = await window.SourcedLondon.callEdgeFunction("ai-proxy", { prompt: specs, mode: "admin_listing" });
     f.description.value = res.text;
   } catch (err) {
     alert("AI assistant isn't connected yet — see the Services tab.");
@@ -308,7 +308,7 @@ async function loadEnquiries() {
       ev.target.textContent = "Drafting…";
       try {
         const prompt = `Enquiry from ${item.name} about ${item.make || ""} ${item.model || ""}. Budget: ${item.budget || "not given"}. Message: ${item.message || "none"}.`;
-        const res = await window.Cleardrive.callEdgeFunction("ai-proxy", { prompt, mode: "admin_reply" });
+        const res = await window.SourcedLondon.callEdgeFunction("ai-proxy", { prompt, mode: "admin_reply" });
         $("#reply-text").value = res.text;
         $("#modal-reply").hidden = false;
       } catch (err) {
@@ -336,7 +336,7 @@ async function loadCustomerLinks() {
       (l) => `
     <tr>
       <td>${l.profiles?.full_name || "Customer"}</td>
-      <td><a href="${l.url}" target="_blank" style="color:var(--gold-bright);">${l.url}</a></td>
+      <td><a href="${l.url}" target="_blank" class="text-link">${l.url}</a></td>
       <td>${l.note || ""}</td>
       <td>${new Date(l.created_at).toLocaleDateString()}</td>
     </tr>`
@@ -464,7 +464,7 @@ $("#vehicle-lookup-btn")?.addEventListener("click", async () => {
   }
   status.textContent = "Checking…";
   try {
-    const data = await window.Cleardrive.callEdgeFunction("vehicle-lookup", { registration: reg });
+    const data = await window.SourcedLondon.callEdgeFunction("vehicle-lookup", { registration: reg });
     const f = $("#vehicle-form");
     if (data.make) f.make.value = data.make;
     if (data.yearOfManufacture) f.year.value = data.yearOfManufacture;
@@ -477,11 +477,11 @@ $("#vehicle-lookup-btn")?.addEventListener("click", async () => {
 
 /* ---------- Services status ---------- */
 async function checkServices() {
-  const cfg = window.Cleardrive.getBackendConfig();
+  const cfg = window.SourcedLondon.getBackendConfig();
   for (const [fn, elId] of [["ai-proxy", "service-ai"], ["stripe-checkout", "service-stripe"], ["vehicle-lookup", "service-lookup"]]) {
     const el = $(`#${elId}`);
     try {
-      const res = await fetch(window.Cleardrive.functionUrl(fn), {
+      const res = await fetch(window.SourcedLondon.functionUrl(fn), {
         method: "POST",
         headers: { "Content-Type": "application/json", apikey: cfg.anonKey, Authorization: `Bearer ${cfg.anonKey}` },
         body: JSON.stringify({}),

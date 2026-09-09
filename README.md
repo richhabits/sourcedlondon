@@ -1,4 +1,4 @@
-# Cleardrive — Self-Serve Luxury Vehicle Sales Template
+# Sourced London — Self-Serve Luxury Vehicle Sales Template
 
 A full site + admin panel + customer accounts + payments + multi-provider AI assistant + UK reg/MOT lookup, built to be **sold or handed to a client as a template**: nobody's API keys are baked in. Each deployment connects its own free Supabase project, its own Stripe test account, and its own free AI/DVLA/DVSA keys from the admin panel — see **`SETUP.md`** for the activation walkthrough.
 
@@ -54,7 +54,7 @@ BRAND-GUIDE.md Logo, type, color, photography do's/don'ts
 
 ## Still needed from you and Dre & Ferrell (content, not code)
 
-- [ ] Final brand name (site currently says "Cleardrive" throughout — see `BRAND-GUIDE.md` for the rename steps)
+- [ ] Final brand name (site currently says "Sourced London" throughout — see `BRAND-GUIDE.md` for the rename steps)
 - [ ] Real email, phone/WhatsApp number, and address — entered once the backend is connected, via **Admin → Site Settings** (no more editing JS files by hand)
 - [ ] Real logo file, if/when designed (current wordmark costs nothing and needs no replacing until you have one)
 - [ ] Real vehicle listings — add these in **Admin → Vehicles** (or bulk-import via the Supabase table editor)
@@ -65,7 +65,7 @@ BRAND-GUIDE.md Logo, type, color, photography do's/don'ts
 ## Design decisions, briefly
 
 - **Reference:** escalux.co.uk — dark, black/navy, sans-serif only, chauffeur-service tone.
-- **Cleardrive differentiation:** charcoal/ivory/brass palette (warmer, less severe), a high-contrast didone serif (Bodoni Moda) paired with Manrope for "quiet luxury," copy repositioned from "status transport" to "trustworthy sales & sourcing."
+- **Sourced London differentiation:** charcoal/ivory/brass palette (warmer, less severe), a high-contrast didone serif (Bodoni Moda) paired with Manrope for "quiet luxury," copy repositioned from "status transport" to "trustworthy sales & sourcing."
 - **Marques strip** (Home + Vehicles) highlights Range Rover / Land Rover / Discovery / Ferrari / Rolls-Royce as direct trade relationships, distinct from the broader "also sourced" list — based on real competitor research into how UK prestige car-sourcing brokers signal capability without a full fleet of stock photos.
 - **"Sell Your Car" is a second funnel**, not bolted onto Contact — same pattern seen across every competitor site researched.
 - **No "Add" button** — removed per your note; vehicle actions are Enquire / Save / WhatsApp.

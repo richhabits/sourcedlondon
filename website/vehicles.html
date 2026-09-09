@@ -3,17 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Luxury Vehicles For Sale & Sourcing Across London — Cleardrive</title>
-<meta name="description" content="Browse Cleardrive's curated fleet of verified luxury vehicles, or enquire for any make and model — sourced and delivered across every London borough.">
-<link rel="canonical" href="https://www.cleardrive.example/vehicles.html">
+<title>Luxury Vehicles For Sale & Sourcing Across London — Sourced London</title>
+<meta name="description" content="Browse Sourced London's curated fleet of verified luxury vehicles, or enquire for any make and model — sourced and delivered across every London borough.">
+<link rel="canonical" href="https://www.sourcedlondon.example/vehicles.html">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Cleardrive">
-<meta property="og:title" content="Luxury Vehicles For Sale & Sourcing Across London — Cleardrive">
-<meta property="og:description" content="Browse Cleardrive's curated fleet of verified luxury vehicles, or enquire for any make and model — sourced and delivered across every London borough.">
+<meta property="og:site_name" content="Sourced London">
+<meta property="og:title" content="Luxury Vehicles For Sale & Sourcing Across London — Sourced London">
+<meta property="og:description" content="Browse Sourced London's curated fleet of verified luxury vehicles, or enquire for any make and model — sourced and delivered across every London borough.">
 <meta name="robots" content="index, follow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+<script>
+(function(){
+  try {
+    if (localStorage.getItem('sourcedlondon_backend_config')) {
+      document.write('<scr' + 'ipt src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></scr' + 'ipt>');
+    }
+  } catch (e) {}
+})();
+</script>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Manrope:wght@400;500;600;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -22,7 +34,7 @@
   <div class="container nav">
     <a href="index.html" class="logo">
       <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 1.5L21.5 12L12 22.5L2.5 12L12 1.5Z" fill="#C9A860"/><path d="M12 1.5L21.5 12L12 12L12 1.5Z" fill="#E4C888"/></svg>
-      <span class="logo-word">CLEARDRIVE</span>
+      <span class="logo-word">SOURCED LONDON</span>
     </a>
     <nav class="nav-links">
       <a href="index.html">Home</a>
@@ -31,10 +43,10 @@
       <a href="about.html">About Us</a>
       <a href="reviews.html">Reviews</a>
       <a href="contact.html">Contact</a>
+      <a href="account.html">Account</a>
     </nav>
     <div class="nav-cta">
-      <a href="account.html" class="btn btn-ghost">Account</a>
-      <a href="contact.html" class="btn btn-ghost">Enquire</a>
+      <a href="contact.html" class="btn btn-primary">Enquire</a>
       <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
     </div>
   </div>
@@ -51,6 +63,7 @@
 <section>
   <div class="container">
 
+    <h2 class="visually-hidden">Current Listings</h2>
     <span class="marque-group-label">Exclusive Access — Direct Trade Relationships</span>
     <div class="marque-row reveal" style="margin-bottom:32px;">
       <a href="contact.html?make=Range%20Rover" class="marque-badge exclusive"><span class="spark">✦</span> Range Rover</a>
@@ -191,30 +204,30 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-col">
-        <h4>Cleardrive</h4>
+        <p class="footer-label">Sourced London</p>
         <p>Curated luxury vehicle sales &amp; sourcing, owned and run by <span data-cfg="ownerNames">Dre &amp; Ferrell</span>.</p>
       </div>
       <div class="footer-col">
-        <h4>Explore</h4>
+        <p class="footer-label">Explore</p>
         <a href="vehicles.html">Vehicles</a>
         <a href="sell.html">Sell Your Car</a>
         <a href="about.html">About Us</a>
         <a href="reviews.html">Reviews</a>
       </div>
       <div class="footer-col">
-        <h4>Contact</h4>
-        <a data-cfg-href="mailto" data-cfg="email" href="#">enquiries@cleardrive.example</a>
+        <p class="footer-label">Contact</p>
+        <a data-cfg-href="mailto" data-cfg="email" href="#">enquiries@sourcedlondon.example</a>
         <a data-cfg-href="tel" data-cfg="phoneDisplay" href="#">+44 00 0000 0000</a>
         <a data-cfg-href="whatsapp" href="#" target="_blank">WhatsApp Us</a>
       </div>
       <div class="footer-col">
-        <h4>Address</h4>
+        <p class="footer-label">Address</p>
         <p data-cfg="address" class="tbc">Address to be confirmed</p>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© <span data-year></span> Cleardrive. All rights reserved.</span>
-      <span>Vehicles prepared &amp; valeted by our partner <a href="https://ghostdetail.autos" target="_blank" style="color:var(--gold-bright);">Ghost Detail</a>.</span>
+      <span>© <span data-year></span> Sourced London. All rights reserved.</span>
+      <span>Vehicles prepared &amp; valeted by our partner <a href="https://ghostdetail.autos" target="_blank" class="text-link">Ghost Detail</a>.</span>
     </div>
   </div>
 </footer>
@@ -223,11 +236,10 @@
   <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.28-1.38a9.9 9.9 0 0 0 4.76 1.21h.01c5.46 0 9.9-4.45 9.9-9.91C21.96 6.45 17.51 2 12.04 2zm5.83 14.11c-.24.68-1.4 1.3-1.93 1.35-.5.05-1.02.24-3.42-.72-2.88-1.15-4.73-4.02-4.87-4.2-.14-.19-1.16-1.55-1.16-2.96 0-1.4.73-2.09.99-2.38.26-.29.57-.36.76-.36.19 0 .38 0 .55.01.18.01.42-.07.65.5.24.58.83 2 .9 2.14.07.14.12.31.02.5-.09.19-.14.31-.28.47-.14.17-.29.37-.42.5-.14.13-.29.28-.12.55.16.28.72 1.19 1.55 1.93 1.07.95 1.97 1.24 2.24 1.38.28.14.44.12.6-.07.17-.19.71-.83.9-1.11.19-.28.38-.24.64-.14.26.09 1.66.78 1.94.93.28.14.47.21.53.33.07.12.07.68-.17 1.35z"/></svg>
 </a>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-<script src="assets/js/supabase-client.js"></script>
-<script src="assets/js/data.js"></script>
-<script src="assets/js/chat-widget.js"></script>
-<script src="assets/js/save-vehicle.js"></script>
-<script src="assets/js/main.js"></script>
+<script src="assets/js/supabase-client.js" defer></script>
+<script src="assets/js/data.js" defer></script>
+<script src="assets/js/chat-widget.js" defer></script>
+<script src="assets/js/save-vehicle.js" defer></script>
+<script src="assets/js/main.js" defer></script>
 </body>
 </html>

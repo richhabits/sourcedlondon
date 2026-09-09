@@ -1,7 +1,7 @@
 /* =========================================================
-   CLEARDRIVE — Design System (working brand name, TBC)
+   SOURCED LONDON — Design System
    Quiet-luxury palette: near-black, ivory, muted brass.
-   Fonts: Fraunces (display serif) + Inter (body sans) — free Google Fonts.
+   Fonts: Bodoni Moda (display serif) + Manrope (body sans) — free Google Fonts.
    ========================================================= */
 
 :root{
@@ -105,26 +105,38 @@ section{ padding:var(--space-7) 0; }
 .nav{ display:flex; align-items:center; justify-content:space-between; padding:20px 0; }
 .logo{ display:flex; align-items:center; gap:10px; }
 .logo svg{ height:28px; width:auto; }
-.logo-word{ font-family:var(--font-display); font-size:1.3rem; letter-spacing:0.04em; color:var(--ivory); }
-.nav-links{ display:flex; gap:var(--space-4); align-items:center; }
+.logo-word{ font-family:var(--font-display); font-size:1.1rem; letter-spacing:0.02em; color:var(--ivory); white-space:nowrap; }
+.nav-links{ display:flex; gap:22px; align-items:center; flex-wrap:nowrap; }
 .nav-links a{
-  font-size:0.82rem; letter-spacing:0.08em; text-transform:uppercase;
-  color:var(--ivory-dim); padding:6px 2px; border-bottom:1px solid transparent;
+  font-size:0.76rem; letter-spacing:0.06em; text-transform:uppercase;
+  color:var(--ivory-dim); padding:6px 1px; border-bottom:1px solid transparent;
+  white-space:nowrap;
   transition:color .2s var(--ease), border-color .2s var(--ease);
 }
 .nav-links a:hover, .nav-links a.active{ color:var(--gold-bright); border-color:var(--gold); }
-.nav-cta{ display:flex; gap:var(--space-2); align-items:center; }
+.nav-cta{ display:flex; gap:var(--space-2); align-items:center; flex-shrink:0; }
 .nav-toggle{ display:none; background:none; border:0; color:var(--ivory); font-size:1.6rem; cursor:pointer; }
 
-@media (max-width: 900px){
+@media (max-width: 1200px){
+  .nav-links{ gap:16px; }
+  .nav-links a{ font-size:0.72rem; }
+}
+
+@media (max-width: 1100px){
   .nav-links{
     position:fixed; inset:72px 0 0 0; background:var(--bg);
     flex-direction:column; align-items:flex-start; padding:var(--space-4) var(--space-3);
     transform:translateX(100%); transition:transform .3s var(--ease); gap:var(--space-3);
+    flex-wrap:wrap; overflow-y:auto;
   }
+  .nav-links a{ font-size:0.85rem; }
   .nav-links.open{ transform:translateX(0); }
   .nav-toggle{ display:block; }
   .nav-cta .btn-ghost{ display:none; }
+}
+
+@media (max-width: 380px){
+  .logo-word{ font-size:0.9rem; }
 }
 
 /* ---------- Hero ---------- */
@@ -264,11 +276,14 @@ section{ padding:var(--space-7) 0; }
 .site-footer{ border-top:1px solid var(--border); padding:var(--space-6) 0 var(--space-4); background:var(--bg-alt); }
 .footer-grid{ display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:var(--space-4); }
 @media (max-width:800px){ .footer-grid{ grid-template-columns:1fr 1fr; } }
-.footer-col h4{ font-family:var(--font-body); font-size:0.78rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); margin-bottom:var(--space-2); }
+.footer-col .footer-label{ font-family:var(--font-body); font-size:0.78rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); margin-bottom:var(--space-2); }
 .footer-col a, .footer-col p{ display:block; font-size:0.88rem; color:var(--ivory-dim); margin-bottom:8px; }
 .footer-bottom{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:var(--space-2); margin-top:var(--space-6); padding-top:var(--space-3); border-top:1px solid var(--border); font-size:0.78rem; color:var(--muted); }
 
 .tbc{ color:var(--gold-bright); border-bottom:1px dashed var(--gold-dim); cursor:help; }
+.visually-hidden{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+.text-link{ color:var(--gold-bright); text-decoration:underline; text-decoration-color:rgba(217,189,130,0.55); text-underline-offset:2px; }
+.text-link:hover{ text-decoration-color:var(--gold-bright); }
 
 /* ---------- Reveal on scroll ---------- */
 .reveal{ opacity:0; transform:translateY(16px); transition:opacity .6s var(--ease), transform .6s var(--ease); }
@@ -293,12 +308,24 @@ section{ padding:var(--space-7) 0; }
 .admin-tab{ display:block; width:100%; text-align:left; background:none; border:0; color:var(--ivory-dim); padding:12px var(--space-3); font-family:var(--font-body); font-size:0.85rem; cursor:pointer; border-left:2px solid transparent; }
 .admin-tab:hover{ color:var(--ivory); background:var(--surface); }
 .admin-tab.active{ color:var(--gold-bright); border-left-color:var(--gold); background:var(--surface); }
-.admin-main{ flex:1; padding:var(--space-5); overflow-y:auto; }
+.admin-main{ flex:1; padding:var(--space-5); overflow-y:auto; min-width:0; }
 .admin-panel{ display:none; }
 .admin-panel.active{ display:block; }
-.admin-topbar{ display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-4); }
+.admin-topbar{ display:flex; justify-content:space-between; align-items:center; gap:var(--space-2); flex-wrap:wrap; margin-bottom:var(--space-4); }
 
-table.data-table{ width:100%; border-collapse:collapse; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); overflow:hidden; }
+@media (max-width:900px){
+  .admin-shell{ flex-direction:column; }
+  .admin-sidebar{ width:100%; display:flex; flex-wrap:wrap; align-items:center; padding:var(--space-2); border-right:0; border-bottom:1px solid var(--border); }
+  .admin-sidebar .logo{ padding:4px var(--space-2); flex-basis:100%; }
+  .admin-tab{ width:auto; border-left:0; border-bottom:2px solid transparent; padding:8px 12px; }
+  .admin-tab.active{ border-left:0; border-bottom-color:var(--gold); }
+  .admin-sidebar > div{ flex-basis:100%; display:flex; gap:8px; padding:var(--space-2) !important; }
+  .admin-sidebar > div .btn{ width:auto; flex:1; }
+  .admin-main{ padding:var(--space-3); }
+}
+
+.table-scroll{ width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; border-radius:var(--radius-md); }
+table.data-table{ width:100%; min-width:560px; border-collapse:collapse; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); overflow:hidden; }
 table.data-table th, table.data-table td{ padding:12px 14px; text-align:left; border-bottom:1px solid var(--border); font-size:0.85rem; }
 table.data-table th{ color:var(--muted); text-transform:uppercase; font-size:0.7rem; letter-spacing:0.06em; }
 table.data-table tr:last-child td{ border-bottom:none; }

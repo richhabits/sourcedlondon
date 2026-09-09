@@ -1,4 +1,4 @@
-# Cleardrive — Activation Guide ("out of the box" setup)
+# Sourced London — Activation Guide ("out of the box" setup)
 
 This template ships with no backend of its own. Whoever runs a copy of it connects their **own** free accounts from inside the admin panel — nothing here is tied to the person who built or sold the template. Total time: ~15 minutes, £0 to start (test mode).
 

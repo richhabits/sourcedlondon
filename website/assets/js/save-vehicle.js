@@ -6,7 +6,7 @@
    ========================================================= */
 
 async function saveVehicleToggle(vehicleId, btn) {
-  const supabase = window.Cleardrive.getSupabase();
+  const supabase = window.SourcedLondon.getSupabase();
   if (!supabase) return;
   const { data: userData } = await supabase.auth.getUser();
   if (!userData?.user) {
@@ -31,7 +31,7 @@ async function saveVehicleToggle(vehicleId, btn) {
 }
 
 function attachSaveButtons() {
-  if (!window.Cleardrive || !window.Cleardrive.isBackendConfigured()) return;
+  if (!window.SourcedLondon || !window.SourcedLondon.isBackendConfigured()) return;
   document.querySelectorAll(".vehicle-card[data-vehicle-id]").forEach((card) => {
     if (card.querySelector("[data-save-btn]")) return;
     const actions = card.querySelector(".vehicle-actions");
@@ -47,4 +47,4 @@ function attachSaveButtons() {
 }
 
 document.addEventListener("DOMContentLoaded", attachSaveButtons);
-document.addEventListener("cleardrive:vehicles-rendered", attachSaveButtons);
+document.addEventListener("sourcedlondon:vehicles-rendered", attachSaveButtons);

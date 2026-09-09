@@ -3,11 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin — Cleardrive</title>
-<meta name="robots" content="noindex, nofollow">
+<title>Admin — Sourced London</title>
+<meta name="description" content="Sourced London admin panel — internal use only."><meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+<script>
+(function(){
+  try {
+    if (localStorage.getItem('sourcedlondon_backend_config')) {
+      document.write('<scr' + 'ipt src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></scr' + 'ipt>');
+    }
+  } catch (e) {}
+})();
+</script>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Manrope:wght@400;500;600;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -22,21 +34,21 @@
     <div class="setup-step">
       <div class="num">1</div>
       <div>
-        <h3>Create a free Supabase project</h3>
-        <p>At <a href="https://supabase.com" target="_blank" style="color:var(--gold-bright);">supabase.com</a> → New Project (free tier). Takes ~2 minutes to spin up.</p>
+        <h2 style="font-size:1.1rem;">Create a free Supabase project</h2>
+        <p>At <a href="https://supabase.com" target="_blank" class="text-link">supabase.com</a> → New Project (free tier). Takes ~2 minutes to spin up.</p>
       </div>
     </div>
     <div class="setup-step">
       <div class="num">2</div>
       <div>
-        <h3>Run the schema</h3>
+        <h2 style="font-size:1.1rem;">Run the schema</h2>
         <p>In your project's SQL Editor, paste and run everything in <code class="inline">supabase/schema.sql</code> from this project folder.</p>
       </div>
     </div>
     <div class="setup-step">
       <div class="num">3</div>
       <div>
-        <h3>Paste your project keys</h3>
+        <h2 style="font-size:1.1rem;">Paste your project keys</h2>
         <p>Project Settings → API → copy the <strong>Project URL</strong> and <strong>anon public key</strong> below.</p>
         <div class="field" style="margin-top:12px;">
           <label for="setup-url">Supabase Project URL</label>
@@ -53,7 +65,7 @@
     <div class="setup-step">
       <div class="num">4</div>
       <div>
-        <h3>Make yourself an admin</h3>
+        <h2 style="font-size:1.1rem;">Make yourself an admin</h2>
         <p>Sign up for an account on the live site's <code class="inline">account.html</code> page first, then in Supabase's SQL Editor run:</p>
         <p><code class="inline">insert into admin_users (id) select id from auth.users where email = 'you@example.com';</code></p>
       </div>
@@ -61,7 +73,7 @@
     <div class="setup-step">
       <div class="num">5</div>
       <div>
-        <h3>Optional: turn on payments, AI &amp; reg lookup</h3>
+        <h2 style="font-size:1.1rem;">Optional: turn on payments, AI &amp; reg lookup</h2>
         <p>See <code class="inline">SETUP.md</code> for the three Edge Functions (Stripe checkout, AI assistant, DVLA/MOT lookup) — each is a couple of terminal commands, all free to run at this scale.</p>
       </div>
     </div>
@@ -85,7 +97,7 @@
       <button type="submit" class="btn btn-primary btn-block">Sign In</button>
       <p id="login-status" class="form-status"></p>
     </form>
-    <p style="margin-top:16px; font-size:0.8rem;">No account yet? Create one on <a href="account.html" style="color:var(--gold-bright);">account.html</a>, then ask an existing admin to add you (see Setup step 4).</p>
+    <p style="margin-top:16px; font-size:0.8rem;">No account yet? Create one on <a href="account.html" class="text-link">account.html</a>, then ask an existing admin to add you (see Setup step 4).</p>
     <p style="margin-top:8px;"><button id="reset-backend" class="btn btn-ghost" style="font-size:0.7rem; padding:8px 14px;">Reconnect a different Supabase project</button></p>
   </div>
 </div>
@@ -94,7 +106,7 @@
 <div id="view-app" class="admin-shell" hidden>
   <aside class="admin-sidebar">
     <div class="logo">
-      <span class="logo-word" style="font-size:1.1rem;">CLEARDRIVE</span>
+      <span class="logo-word" style="font-size:1.1rem;">SOURCED LONDON</span>
       <div style="font-size:0.7rem; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase; margin-top:2px;">Admin</div>
     </div>
     <button class="admin-tab active" data-tab="dashboard">Dashboard</button>
@@ -125,20 +137,20 @@
 
     <section id="panel-vehicles" class="admin-panel">
       <div class="admin-topbar"><h2>Vehicles</h2><button class="btn btn-primary" data-open-modal="vehicle">+ Add Vehicle</button></div>
-      <table class="data-table"><thead><tr><th>Make / Model</th><th>Year</th><th>Price</th><th>Status</th><th></th></tr></thead><tbody id="vehicles-body"></tbody></table>
+      <div class="table-scroll"><table class="data-table"><thead><tr><th>Make / Model</th><th>Year</th><th>Price</th><th>Status</th><th></th></tr></thead><tbody id="vehicles-body"></tbody></table></div>
     </section>
 
     <section id="panel-testimonials" class="admin-panel">
       <div class="admin-topbar"><h2>Testimonials</h2><button class="btn btn-primary" data-open-modal="testimonial">+ Add Testimonial</button></div>
-      <table class="data-table"><thead><tr><th>Client</th><th>Vehicle</th><th>Published</th><th></th></tr></thead><tbody id="testimonials-body"></tbody></table>
+      <div class="table-scroll"><table class="data-table"><thead><tr><th>Client</th><th>Vehicle</th><th>Published</th><th></th></tr></thead><tbody id="testimonials-body"></tbody></table></div>
     </section>
 
     <section id="panel-enquiries" class="admin-panel">
       <div class="admin-topbar"><h2>Enquiries</h2></div>
-      <table class="data-table"><thead><tr><th>Type</th><th>Name</th><th>Make / Model</th><th>Contact</th><th>Status</th><th></th></tr></thead><tbody id="enquiries-body"></tbody></table>
+      <div class="table-scroll"><table class="data-table"><thead><tr><th>Type</th><th>Name</th><th>Make / Model</th><th>Contact</th><th>Status</th><th></th></tr></thead><tbody id="enquiries-body"></tbody></table></div>
 
       <div class="admin-topbar" style="margin-top:40px;"><h2 style="font-size:1.2rem;">Vehicles Customers Are Watching Elsewhere</h2></div>
-      <table class="data-table"><thead><tr><th>Customer</th><th>Link</th><th>Note</th><th>Added</th></tr></thead><tbody id="customer-links-body"></tbody></table>
+      <div class="table-scroll"><table class="data-table"><thead><tr><th>Customer</th><th>Link</th><th>Note</th><th>Added</th></tr></thead><tbody id="customer-links-body"></tbody></table></div>
     </section>
 
     <section id="panel-messages" class="admin-panel">
@@ -163,27 +175,27 @@
     <section id="panel-reservations" class="admin-panel">
       <div class="admin-topbar"><h2>Reservations</h2></div>
       <p class="form-note">Stripe is in test mode with no webhook wired up — check the Stripe dashboard for the matching payment, then mark it Paid here.</p>
-      <table class="data-table" style="margin-top:16px;"><thead><tr><th>Vehicle</th><th>Amount</th><th>Status</th><th></th></tr></thead><tbody id="reservations-body"></tbody></table>
+      <div class="table-scroll"><table class="data-table" style="margin-top:16px;"><thead><tr><th>Vehicle</th><th>Amount</th><th>Status</th><th></th></tr></thead><tbody id="reservations-body"></tbody></table></div>
     </section>
 
     <section id="panel-settings" class="admin-panel">
       <div class="admin-topbar"><h2>Site Settings</h2></div>
       <div class="card" style="max-width:520px;">
         <form id="settings-form">
-          <div class="field" style="margin-bottom:14px;"><label>Brand Name</label><input type="text" name="brand_name"></div>
-          <div class="field" style="margin-bottom:14px;"><label>Owner Names</label><input type="text" name="owner_names"></div>
-          <div class="field" style="margin-bottom:14px;"><label>Email</label><input type="email" name="email"></div>
-          <div class="field" style="margin-bottom:14px;"><label>Phone (display)</label><input type="text" name="phone_display" placeholder="+44 00 0000 0000"></div>
-          <div class="field" style="margin-bottom:14px;"><label>Phone (digits only, for tel/whatsapp links)</label><input type="text" name="phone_intl" placeholder="447..."></div>
-          <div class="field" style="margin-bottom:14px;"><label>WhatsApp (digits only)</label><input type="text" name="whatsapp_intl" placeholder="447..."></div>
-          <div class="field" style="margin-bottom:14px;"><label>Address</label><input type="text" name="address"></div>
+          <div class="field" style="margin-bottom:14px;"><label for="field-settings-form-brand_name">Brand Name</label><input type="text" name="brand_name" id="field-settings-form-brand_name"></div>
+          <div class="field" style="margin-bottom:14px;"><label for="field-settings-form-owner_names">Owner Names</label><input type="text" name="owner_names" id="field-settings-form-owner_names"></div>
+          <div class="field" style="margin-bottom:14px;"><label for="field-settings-form-email">Email</label><input type="email" name="email" id="field-settings-form-email"></div>
+          <div class="field" style="margin-bottom:14px;"><label for="field-settings-form-phone_display">Phone (display)</label><input type="text" name="phone_display" placeholder="+44 00 0000 0000" id="field-settings-form-phone_display"></div>
+          <div class="field" style="margin-bottom:14px;"><label for="field-settings-form-phone_intl">Phone (digits only, for tel/whatsapp links)</label><input type="text" name="phone_intl" placeholder="447..." id="field-settings-form-phone_intl"></div>
+          <div class="field" style="margin-bottom:14px;"><label for="field-settings-form-whatsapp_intl">WhatsApp (digits only)</label><input type="text" name="whatsapp_intl" placeholder="447..." id="field-settings-form-whatsapp_intl"></div>
+          <div class="field" style="margin-bottom:14px;"><label for="field-settings-form-address">Address</label><input type="text" name="address" id="field-settings-form-address"></div>
 
           <h3 style="margin-top:24px; font-size:1rem;">Trust &amp; Compliance</h3>
           <p class="field-hint" style="margin-bottom:14px;">Only fill these in once they're real — each renders on the public site only when set, and is never shown as a placeholder claim.</p>
-          <div class="field" style="margin-bottom:14px;"><label>Trustpilot Profile URL</label><input type="text" name="trustpilot_url" placeholder="https://uk.trustpilot.com/review/..."></div>
-          <div class="field" style="margin-bottom:14px;"><label>Google Reviews URL</label><input type="text" name="google_reviews_url" placeholder="https://g.page/..."></div>
-          <div class="field" style="margin-bottom:14px;"><label>FCA Reference Number</label><input type="text" name="fca_number"></div>
-          <div class="field" style="margin-bottom:14px;"><label>BVRLA Membership Number</label><input type="text" name="bvrla_number"></div>
+          <div class="field" style="margin-bottom:14px;"><label for="field-settings-form-trustpilot_url">Trustpilot Profile URL</label><input type="text" name="trustpilot_url" placeholder="https://uk.trustpilot.com/review/..." id="field-settings-form-trustpilot_url"></div>
+          <div class="field" style="margin-bottom:14px;"><label for="field-settings-form-google_reviews_url">Google Reviews URL</label><input type="text" name="google_reviews_url" placeholder="https://g.page/..." id="field-settings-form-google_reviews_url"></div>
+          <div class="field" style="margin-bottom:14px;"><label for="field-settings-form-fca_number">FCA Reference Number</label><input type="text" name="fca_number" id="field-settings-form-fca_number"></div>
+          <div class="field" style="margin-bottom:14px;"><label for="field-settings-form-bvrla_number">BVRLA Membership Number</label><input type="text" name="bvrla_number" id="field-settings-form-bvrla_number"></div>
 
           <button type="submit" class="btn btn-primary">Save Settings</button>
           <p id="settings-status" class="form-status"></p>
@@ -227,24 +239,24 @@
       <input type="hidden" name="id">
       <div class="form-grid">
         <div class="field full">
-          <label>Registration (optional)</label>
+          <label for="vehicle-reg-input">Registration (optional)</label>
           <div style="display:flex; gap:8px;">
             <input type="text" name="reg" id="vehicle-reg-input" placeholder="e.g. AB12 CDE" style="text-transform:uppercase; flex:1;">
             <button type="button" id="vehicle-lookup-btn" class="btn btn-ghost" style="white-space:nowrap;">Look Up Reg</button>
           </div>
           <p id="vehicle-lookup-status" class="field-hint"></p>
         </div>
-        <div class="field"><label>Make</label><input type="text" name="make" required></div>
-        <div class="field"><label>Model</label><input type="text" name="model" required></div>
-        <div class="field"><label>Year</label><input type="number" name="year"></div>
-        <div class="field"><label>Mileage</label><input type="number" name="mileage"></div>
-        <div class="field"><label>Spec</label><input type="text" name="spec"></div>
-        <div class="field"><label>Price (GBP)</label><input type="number" name="price_gbp"></div>
-        <div class="field"><label>Status</label>
-          <select name="status"><option value="available">Available</option><option value="reserved">Reserved</option><option value="sold">Sold</option></select>
+        <div class="field"><label for="field-vehicle-form-make">Make</label><input type="text" name="make" required id="field-vehicle-form-make"></div>
+        <div class="field"><label for="field-vehicle-form-model">Model</label><input type="text" name="model" required id="field-vehicle-form-model"></div>
+        <div class="field"><label for="field-vehicle-form-year">Year</label><input type="number" name="year" id="field-vehicle-form-year"></div>
+        <div class="field"><label for="field-vehicle-form-mileage">Mileage</label><input type="number" name="mileage" id="field-vehicle-form-mileage"></div>
+        <div class="field"><label for="field-vehicle-form-spec">Spec</label><input type="text" name="spec" id="field-vehicle-form-spec"></div>
+        <div class="field"><label for="field-vehicle-form-price_gbp">Price (GBP)</label><input type="number" name="price_gbp" id="field-vehicle-form-price_gbp"></div>
+        <div class="field"><label for="field-vehicle-form-status">Status</label>
+          <select name="status" id="field-vehicle-form-status"><option value="available">Available</option><option value="reserved">Reserved</option><option value="sold">Sold</option></select>
         </div>
-        <div class="field"><label>Photo URL</label><input type="text" name="photo_url" placeholder="https://..."></div>
-        <div class="field full"><label>Description</label><textarea name="description"></textarea></div>
+        <div class="field"><label for="field-vehicle-form-photo_url">Photo URL</label><input type="text" name="photo_url" placeholder="https://..." id="field-vehicle-form-photo_url"></div>
+        <div class="field full"><label for="field-vehicle-form-description">Description</label><textarea name="description" id="field-vehicle-form-description"></textarea></div>
       </div>
       <div style="margin-top:12px;"><button type="button" id="vehicle-ai-draft" class="btn btn-ghost">✦ Draft description with AI</button></div>
       <div class="hero-actions" style="margin-top:20px;">
@@ -260,10 +272,10 @@
     <h3>Testimonial</h3>
     <form id="testimonial-form">
       <input type="hidden" name="id">
-      <div class="field" style="margin-bottom:14px;"><label>Client Name</label><input type="text" name="client_name" required></div>
-      <div class="field" style="margin-bottom:14px;"><label>Vehicle Purchased</label><input type="text" name="vehicle_purchased"></div>
-      <div class="field" style="margin-bottom:14px;"><label>Photo URL</label><input type="text" name="photo_url" placeholder="https://..."></div>
-      <div class="field" style="margin-bottom:14px;"><label>Quote</label><textarea name="quote" required></textarea></div>
+      <div class="field" style="margin-bottom:14px;"><label for="field-testimonial-form-client_name">Client Name</label><input type="text" name="client_name" required id="field-testimonial-form-client_name"></div>
+      <div class="field" style="margin-bottom:14px;"><label for="field-testimonial-form-vehicle_purchased">Vehicle Purchased</label><input type="text" name="vehicle_purchased" id="field-testimonial-form-vehicle_purchased"></div>
+      <div class="field" style="margin-bottom:14px;"><label for="field-testimonial-form-photo_url">Photo URL</label><input type="text" name="photo_url" placeholder="https://..." id="field-testimonial-form-photo_url"></div>
+      <div class="field" style="margin-bottom:14px;"><label for="field-testimonial-form-quote">Quote</label><textarea name="quote" required id="field-testimonial-form-quote"></textarea></div>
       <div class="field" style="margin-bottom:14px;"><label><input type="checkbox" name="is_published" style="width:auto; display:inline-block;"> Published on site</label></div>
       <div class="hero-actions">
         <button type="submit" class="btn btn-primary">Save</button>
@@ -277,15 +289,14 @@
   <div class="modal-box">
     <h3>Draft a reply</h3>
     <p style="font-size:0.85rem;">Generated by AI — edit before sending. Nothing is sent automatically; copy it into WhatsApp or email.</p>
-    <textarea id="reply-text" style="width:100%; min-height:160px; background:var(--bg-alt); border:1px solid var(--border-strong); color:var(--ivory); border-radius:4px; padding:12px; font-family:var(--font-body);"></textarea>
+    <textarea id="reply-text" aria-label="Drafted reply text" style="width:100%; min-height:160px; background:var(--bg-alt); border:1px solid var(--border-strong); color:var(--ivory); border-radius:4px; padding:12px; font-family:var(--font-body);"></textarea>
     <div class="hero-actions" style="margin-top:16px;">
       <button type="button" class="btn btn-ghost" data-close-modal>Close</button>
     </div>
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-<script src="assets/js/supabase-client.js"></script>
-<script src="assets/js/admin.js"></script>
+<script src="assets/js/supabase-client.js" defer></script>
+<script src="assets/js/admin.js" defer></script>
 </body>
 </html>

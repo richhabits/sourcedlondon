@@ -8,11 +8,11 @@ let supabase = null;
 let mode = "signin"; // or "signup"
 
 async function boot() {
-  if (!window.Cleardrive.isBackendConfigured()) {
+  if (!window.SourcedLondon.isBackendConfigured()) {
     $("#backend-warning").hidden = false;
     return;
   }
-  supabase = window.Cleardrive.getSupabase();
+  supabase = window.SourcedLondon.getSupabase();
   const { data } = await supabase.auth.getSession();
   if (data?.session) {
     showDashboard();
@@ -93,7 +93,7 @@ async function loadMyEnquiries(userId, email) {
     .map(
       (e) => `<tr><td>${[e.make, e.model].filter(Boolean).join(" ") || "General enquiry"}</td><td><span class="badge badge-${e.status}">${e.status}</span></td><td>${new Date(e.created_at).toLocaleDateString()}</td></tr>`
     )
-    .join("") || `<tr><td colspan="3" style="color:var(--muted);">No enquiries yet — visit the <a href="vehicles.html" style="color:var(--gold-bright);">Vehicles page</a> to start one.</td></tr>`;
+    .join("") || `<tr><td colspan="3" style="color:var(--muted);">No enquiries yet — visit the <a href="vehicles.html" class="text-link">Vehicles page</a> to start one.</td></tr>`;
 }
 
 async function loadMySaved(userId) {
@@ -127,7 +127,7 @@ async function loadMySaved(userId) {
 
 async function startReservation(vehicleId, amount) {
   try {
-    const res = await window.Cleardrive.callEdgeFunction("stripe-checkout", {
+    const res = await window.SourcedLondon.callEdgeFunction("stripe-checkout", {
       vehicle_id: vehicleId,
       amount_gbp: amount,
       success_url: window.location.origin + window.location.pathname + "?reserved=1",
@@ -155,7 +155,7 @@ async function loadMyLinks(userId) {
   if (!body) return;
   body.innerHTML = (data || [])
     .map(
-      (l) => `<tr data-id="${l.id}"><td><a href="${l.url}" target="_blank" style="color:var(--gold-bright);">${l.url.slice(0, 50)}</a></td><td>${l.note || ""}</td><td class="row-actions"><button data-remove-link>Remove</button></td></tr>`
+      (l) => `<tr data-id="${l.id}"><td><a href="${l.url}" target="_blank" class="text-link">${l.url.slice(0, 50)}</a></td><td>${l.note || ""}</td><td class="row-actions"><button data-remove-link>Remove</button></td></tr>`
     )
     .join("") || `<tr><td colspan="3" style="color:var(--muted);">Nothing saved yet.</td></tr>`;
   body.querySelectorAll("[data-remove-link]").forEach((btn) => {

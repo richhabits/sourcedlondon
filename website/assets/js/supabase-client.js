@@ -5,7 +5,7 @@
    every deployed copy of this site points at its OWN backend.
    ========================================================= */
 
-const CFG_KEY = "cleardrive_backend_config";
+const CFG_KEY = "sourcedlondon_backend_config";
 
 function getBackendConfig() {
   try {
@@ -71,8 +71,8 @@ async function callEdgeFunction(name, body) {
   return json;
 }
 
-window.Cleardrive = window.Cleardrive || {};
-Object.assign(window.Cleardrive, {
+window.SourcedLondon = window.SourcedLondon || {};
+Object.assign(window.SourcedLondon, {
   getBackendConfig,
   setBackendConfig,
   clearBackendConfig,

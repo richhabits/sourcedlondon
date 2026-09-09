@@ -1,10 +1,10 @@
-# Cleardrive — Brand Guide (working draft)
+# Sourced London — Brand Guide (working draft)
 
-Working name: **Cleardrive**. Everything here is built to be renamed in ~10 minutes once you confirm the real brand name — see "How to rename" at the bottom.
+Working name: **Sourced London**. Everything here is built to be renamed in ~10 minutes once you confirm the real brand name — see "How to rename" at the bottom.
 
 ## Logo
 
-The site currently ships with a **text wordmark** ("CLEARDRIVE" set in Fraunces, a quiet-luxury serif) plus a small diamond/chevron mark — no paid logo generation was used, so there's nothing to swap out or pay for later.
+The site currently ships with a **text wordmark** ("SOURCED LONDON" set in Fraunces, a quiet-luxury serif) plus a small diamond/chevron mark — no paid logo generation was used, so there's nothing to swap out or pay for later.
 
 **Do:**
 - Keep generous clear space around the logo (at least the height of the mark on all sides).
@@ -58,7 +58,7 @@ Sophisticated, direct, low-pressure. Short sentences. No exclamation marks, no "
 
 ## How to rename once the brand name is confirmed
 
-1. Find/replace `Cleardrive` → new name across `website/*.html` and `README.md`.
+1. Find/replace `Sourced London` → new name across `website/*.html` and `README.md`.
 2. Update `<title>` and `<meta name="description">` tags in each page's `<head>`.
 3. Update `brandName` in `website/assets/js/main.js`.
 4. If the new name changes the "quiet luxury" fit of Fraunces/gold, re-run this brief through the `ui-ux-pro-max` or `design` skill with the new name for a fresh palette/type check before committing to it site-wide.

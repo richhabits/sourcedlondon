@@ -7,8 +7,8 @@
    ========================================================= */
 
 document.addEventListener("DOMContentLoaded", async () => {
-  if (!window.Cleardrive || !window.Cleardrive.isBackendConfigured()) return;
-  const supabase = window.Cleardrive.getSupabase();
+  if (!window.SourcedLondon || !window.SourcedLondon.isBackendConfigured()) return;
+  const supabase = window.SourcedLondon.getSupabase();
   if (!supabase) return;
 
   await Promise.all([applySiteSettings(supabase), applyVehicles(supabase), applyTestimonials(supabase)]);
@@ -19,7 +19,7 @@ async function applySiteSettings(supabase) {
   if (error || !data) return;
   const map = Object.fromEntries(data.map((r) => [r.key, r.value]));
 
-  const cfg = window.CLEARDRIVE_CONFIG || {};
+  const cfg = window.SOURCEDLONDON_CONFIG || {};
   if (map.email) cfg.email = map.email;
   if (map.phone_display) cfg.phoneDisplay = map.phone_display;
   if (map.phone_intl) cfg.phoneIntl = map.phone_intl;
@@ -27,7 +27,7 @@ async function applySiteSettings(supabase) {
   if (map.address) cfg.address = map.address;
   if (map.owner_names) cfg.ownerNames = map.owner_names;
   if (map.brand_name) cfg.brandName = map.brand_name;
-  window.CLEARDRIVE_CONFIG = cfg;
+  window.SOURCEDLONDON_CONFIG = cfg;
 
   document.querySelectorAll("[data-cfg]").forEach((el) => {
     const key = el.getAttribute("data-cfg");
@@ -89,10 +89,10 @@ async function applyVehicles(supabase) {
   if (error || !data || data.length === 0) return;
   grid.innerHTML = data.map(vehicleCardHTML).join("");
   document.querySelectorAll("[data-cfg-href='whatsapp']").forEach((el) => {
-    const cfg = window.CLEARDRIVE_CONFIG || {};
+    const cfg = window.SOURCEDLONDON_CONFIG || {};
     if (cfg.whatsappIntl) el.href = `https://wa.me/${cfg.whatsappIntl}`;
   });
-  document.dispatchEvent(new CustomEvent("cleardrive:vehicles-rendered"));
+  document.dispatchEvent(new CustomEvent("sourcedlondon:vehicles-rendered"));
 }
 
 function testimonialCardHTML(t) {

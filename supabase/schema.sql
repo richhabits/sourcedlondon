@@ -1,5 +1,5 @@
 -- =========================================================
--- Cleardrive template — database schema
+-- Sourced London template — database schema
 -- Run this ONCE in your own Supabase project's SQL Editor
 -- (Dashboard -> SQL Editor -> New query -> paste all -> Run).
 -- Safe to re-run: uses IF NOT EXISTS / CREATE OR REPLACE throughout.
@@ -214,7 +214,7 @@ create policy "messages_update_read" on public.messages for update using (auth.u
 -- ---------- Starter content so the site isn't empty on first load ----------
 
 insert into public.site_settings (key, value) values
-  ('brand_name', 'Cleardrive'),
+  ('brand_name', 'Sourced London'),
   ('email', ''),
   ('phone_display', ''),
   ('phone_intl', ''),

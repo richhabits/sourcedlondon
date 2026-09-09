@@ -10,12 +10,12 @@
   function buildWidget() {
     const wrap = document.createElement("div");
     wrap.innerHTML = `
-      <button id="cd-chat-toggle" class="wa-float" style="right:88px; background:var(--gold); color:#141414;" aria-label="Chat with the Cleardrive assistant">
+      <button id="cd-chat-toggle" class="wa-float" style="right:88px; background:var(--gold); color:#141414;" aria-label="Chat with the Sourced London assistant">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
       </button>
       <div id="cd-chat-panel" hidden style="position:fixed; right:20px; bottom:88px; width:320px; max-width:calc(100vw - 40px); height:420px; background:var(--surface); border:1px solid var(--border-strong); border-radius:8px; box-shadow:0 16px 48px rgba(0,0,0,0.5); z-index:61; display:flex; flex-direction:column; overflow:hidden;">
         <div style="padding:14px 16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
-          <strong style="font-family:var(--font-display); color:var(--gold-bright);">Cleardrive Assistant</strong>
+          <strong style="font-family:var(--font-display); color:var(--gold-bright);">Sourced London Assistant</strong>
           <button id="cd-chat-close" style="background:none;border:0;color:var(--muted);font-size:1.2rem;cursor:pointer;">✕</button>
         </div>
         <div id="cd-chat-log" style="flex:1; overflow-y:auto; padding:14px 16px; display:flex; flex-direction:column; gap:10px; font-size:0.88rem;"></div>
@@ -48,7 +48,7 @@
     toggle.addEventListener("click", () => {
       panel.hidden = !panel.hidden;
       if (!panel.hidden && log.children.length === 0) {
-        addBubble("assistant", "Hi — I'm the Cleardrive assistant. Ask me about a make/model or how buying through us works.");
+        addBubble("assistant", "Hi — I'm the Sourced London assistant. Ask me about a make/model or how buying through us works.");
       }
     });
     closeBtn.addEventListener("click", () => (panel.hidden = true));
@@ -63,7 +63,7 @@
       addBubble("assistant", "…");
       const thinkingBubble = log.lastChild;
       try {
-        const res = await window.Cleardrive.callEdgeFunction("ai-proxy", { prompt: text, mode: "chat", history });
+        const res = await window.SourcedLondon.callEdgeFunction("ai-proxy", { prompt: text, mode: "chat", history });
         thinkingBubble.textContent = res.text;
         history.push({ role: "assistant", text: res.text });
       } catch (err) {
@@ -73,7 +73,7 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    if (!window.Cleardrive || !window.Cleardrive.isBackendConfigured()) return;
+    if (!window.SourcedLondon || !window.SourcedLondon.isBackendConfigured()) return;
     buildWidget();
   });
 })();
