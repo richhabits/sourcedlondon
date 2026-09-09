@@ -4,6 +4,18 @@ A luxury vehicle sourcing & sales website — public site, admin panel, customer
 
 **Live:** [sourcedlondon.vercel.app](https://sourcedlondon.vercel.app) · **Repo:** [github.com/richhabits/sourcedlondon](https://github.com/richhabits/sourcedlondon)
 
+## Getting the code back (if you've deleted the local copy)
+
+Everything in this repo is safely on GitHub — verified identical to the working copy before it was ever deleted locally. To get it back on any machine:
+
+```bash
+git clone https://github.com/richhabits/sourcedlondon.git
+cd sourcedlondon
+open "website/index.html"
+```
+
+The live site at sourcedlondon.vercel.app keeps running regardless — it deploys from GitHub, not from your Mac.
+
 ## How to preview right now (no setup required)
 
 ```
