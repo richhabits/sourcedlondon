@@ -57,18 +57,19 @@ async function applySiteSettings(supabase) {
 }
 
 function vehicleCardHTML(v) {
+  const esc = window.SourcedLondon.escapeHtml;
   const price = v.price_poa || !v.price_gbp ? "£ POA" : `£${Number(v.price_gbp).toLocaleString()}`;
   const photo = v.photos && v.photos[0];
   const media = photo
-    ? `<img src="${photo}" alt="${v.make} ${v.model}" style="width:100%;height:100%;object-fit:cover;">`
+    ? `<img src="${esc(photo)}" alt="${esc(v.make)} ${esc(v.model)}" style="width:100%;height:100%;object-fit:cover;">`
     : `Vehicle photo<br>to be added`;
   return `
-    <div class="vehicle-card reveal in" data-make="${v.make}" data-vehicle-id="${v.id}">
+    <div class="vehicle-card reveal in" data-make="${esc(v.make)}" data-vehicle-id="${esc(v.id)}">
       <div class="vehicle-media">${media}</div>
       <div class="vehicle-body">
-        <span class="make">${v.make}</span>
-        <h3>${v.model}</h3>
-        <div class="vehicle-meta"><span>${v.year || ""}</span><span>${v.mileage ? v.mileage.toLocaleString() + " mi" : ""}</span><span>${v.spec || ""}</span></div>
+        <span class="make">${esc(v.make)}</span>
+        <h3>${esc(v.model)}</h3>
+        <div class="vehicle-meta"><span>${esc(v.year || "")}</span><span>${v.mileage ? esc(v.mileage.toLocaleString()) + " mi" : ""}</span><span>${esc(v.spec || "")}</span></div>
         <div class="vehicle-price">${price}</div>
         <div class="vehicle-actions">
           <a class="btn btn-ghost" href="contact.html?make=${encodeURIComponent(v.make)}&model=${encodeURIComponent(v.model)}">Enquire</a>
@@ -96,16 +97,17 @@ async function applyVehicles(supabase) {
 }
 
 function testimonialCardHTML(t) {
+  const esc = window.SourcedLondon.escapeHtml;
   const shot = t.photo_url
-    ? `<img src="${t.photo_url}" alt="${t.client_name}'s vehicle" style="width:100%;height:100%;object-fit:cover;border-radius:4px;">`
+    ? `<img src="${esc(t.photo_url)}" alt="${esc(t.client_name)}'s vehicle" style="width:100%;height:100%;object-fit:cover;border-radius:4px;">`
     : `Client's vehicle photo<br>to be added`;
   return `
     <div class="testimonial-card reveal in">
       <div class="testimonial-vehicle-shot">${shot}</div>
-      <div class="testimonial-quote">"${t.quote}"</div>
+      <div class="testimonial-quote">"${esc(t.quote)}"</div>
       <div class="testimonial-person">
-        <div class="avatar">${(t.client_name || "?").charAt(0)}</div>
-        <div><strong>${t.client_name}</strong><div style="color:var(--muted); font-size:0.8rem;">Purchased: ${t.vehicle_purchased || ""}</div></div>
+        <div class="avatar">${esc((t.client_name || "?").charAt(0))}</div>
+        <div><strong>${esc(t.client_name)}</strong><div style="color:var(--muted); font-size:0.8rem;">Purchased: ${esc(t.vehicle_purchased || "")}</div></div>
       </div>
     </div>`;
 }

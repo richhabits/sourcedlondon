@@ -5,6 +5,7 @@
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+const esc = (v) => window.SourcedLondon.escapeHtml(v);
 
 let supabase = null;
 
@@ -57,19 +58,50 @@ async function checkIsAdmin() {
 }
 
 /* ---------- Setup ---------- */
-$("#setup-save")?.addEventListener("click", () => {
-  const url = $("#setup-url").value.trim();
+$("#setup-save")?.addEventListener("click", async () => {
+  const url = $("#setup-url").value.trim().replace(/\/+$/, "");
   const anonKey = $("#setup-key").value.trim();
   const status = $("#setup-status");
+  const btn = $("#setup-save");
+  status.classList.remove("ok", "err");
+
   if (!url || !anonKey) {
     status.textContent = "Both fields are required.";
     status.classList.add("visible", "err");
     return;
   }
-  window.SourcedLondon.setBackendConfig({ url, anonKey });
-  status.textContent = "Connected. Loading...";
-  status.classList.add("visible", "ok");
-  setTimeout(() => window.location.reload(), 600);
+  if (!/^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(url)) {
+    status.textContent = "That doesn't look like a Supabase project URL — it should look like https://xxxxx.supabase.co with nothing after it.";
+    status.classList.add("visible", "err");
+    return;
+  }
+
+  btn.disabled = true;
+  status.textContent = "Testing connection…";
+  status.classList.add("visible");
+
+  try {
+    const res = await fetch(`${url}/rest/v1/site_settings?select=key&limit=1`, {
+      headers: { apikey: anonKey, Authorization: `Bearer ${anonKey}` },
+    });
+    if (res.status === 401 || res.status === 403) {
+      throw new Error("That key was rejected — make sure you copied the anon public key, not the service role key.");
+    }
+    if (res.status === 404) {
+      throw new Error("Connected to the project, but the database tables don't exist yet — run supabase/schema.sql in your project's SQL Editor first, then try again.");
+    }
+    if (!res.ok) {
+      throw new Error(`Unexpected response (HTTP ${res.status}) — double check the URL and key.`);
+    }
+    window.SourcedLondon.setBackendConfig({ url, anonKey });
+    status.textContent = "Connected! Loading…";
+    status.classList.add("ok");
+    setTimeout(() => window.location.reload(), 500);
+  } catch (err) {
+    status.textContent = err instanceof Error ? err.message : "Couldn't reach that Supabase project — check the URL and key.";
+    status.classList.add("err");
+    btn.disabled = false;
+  }
 });
 
 $("#reset-backend")?.addEventListener("click", () => {
@@ -140,8 +172,8 @@ async function loadVehicles() {
     .map(
       (v) => `
     <tr data-id="${v.id}">
-      <td><strong>${v.make}</strong> ${v.model}</td>
-      <td>${v.year || "–"}</td>
+      <td><strong>${esc(v.make)}</strong> ${esc(v.model)}</td>
+      <td>${esc(v.year || "–")}</td>
       <td>${v.price_poa || !v.price_gbp ? "POA" : "£" + Number(v.price_gbp).toLocaleString()}</td>
       <td><span class="badge badge-${v.status}">${v.status}</span></td>
       <td class="row-actions"><button data-edit>Edit</button><button data-delete>Delete</button></td>
@@ -224,8 +256,8 @@ async function loadTestimonials() {
     .map(
       (t) => `
     <tr data-id="${t.id}">
-      <td>${t.client_name}</td>
-      <td>${t.vehicle_purchased || "–"}</td>
+      <td>${esc(t.client_name)}</td>
+      <td>${esc(t.vehicle_purchased || "–")}</td>
       <td><span class="badge ${t.is_published ? "badge-won" : "badge-lost"}">${t.is_published ? "Yes" : "No"}</span></td>
       <td class="row-actions"><button data-edit>Edit</button><button data-delete>Delete</button></td>
     </tr>`
@@ -285,9 +317,9 @@ async function loadEnquiries() {
       (e) => `
     <tr data-id="${e.id}">
       <td><span class="badge ${e.lead_type === "sell" ? "badge-pending" : "badge-won"}">${e.lead_type === "sell" ? "Selling" : "Buying"}</span></td>
-      <td>${e.name}</td>
-      <td>${[e.make, e.model].filter(Boolean).join(" ") || "–"}${e.vehicle_reg ? `<br><span style="color:var(--muted); font-size:0.75rem;">Reg: ${e.vehicle_reg}</span>` : ""}</td>
-      <td>${e.email}<br><span style="color:var(--muted);">${e.phone || ""}</span></td>
+      <td>${esc(e.name)}</td>
+      <td>${esc([e.make, e.model].filter(Boolean).join(" ") || "–")}${e.vehicle_reg ? `<br><span style="color:var(--muted); font-size:0.75rem;">Reg: ${esc(e.vehicle_reg)}</span>` : ""}</td>
+      <td>${esc(e.email)}<br><span style="color:var(--muted);">${esc(e.phone || "")}</span></td>
       <td>
         <select data-status style="background:var(--bg-alt); color:var(--ivory); border:1px solid var(--border-strong); border-radius:4px; padding:4px 8px;">
           ${["new", "contacted", "won", "lost"].map((s) => `<option value="${s}" ${s === e.status ? "selected" : ""}>${s}</option>`).join("")}
@@ -335,9 +367,9 @@ async function loadCustomerLinks() {
     .map(
       (l) => `
     <tr>
-      <td>${l.profiles?.full_name || "Customer"}</td>
-      <td><a href="${l.url}" target="_blank" class="text-link">${l.url}</a></td>
-      <td>${l.note || ""}</td>
+      <td>${esc(l.profiles?.full_name || "Customer")}</td>
+      <td><a href="${esc(l.url)}" target="_blank" class="text-link">${esc(l.url)}</a></td>
+      <td>${esc(l.note || "")}</td>
       <td>${new Date(l.created_at).toLocaleDateString()}</td>
     </tr>`
     )
@@ -366,8 +398,8 @@ async function loadMessageThreads() {
       const unread = msgs.some((m) => m.sender_role === "customer" && !m.read_by_admin);
       return `
       <button class="admin-tab${userId === activeThreadUserId ? " active" : ""}" data-thread="${userId}" style="width:100%; text-align:left; border-left:2px solid ${unread ? "var(--gold)" : "transparent"};">
-        <strong>${nameFor(userId)}</strong>${unread ? " •" : ""}<br>
-        <span style="font-size:0.75rem; color:var(--muted);">${last.body.slice(0, 40)}</span>
+        <strong>${esc(nameFor(userId))}</strong>${unread ? " •" : ""}<br>
+        <span style="font-size:0.75rem; color:var(--muted);">${esc(last.body.slice(0, 40))}</span>
       </button>`;
     })
     .join("") || `<p style="padding:16px; color:var(--muted);">No conversations yet.</p>`;
@@ -386,7 +418,7 @@ async function openMessageThread(userId) {
   const log = $("#message-log");
   log.innerHTML = (data || [])
     .map(
-      (m) => `<div style="align-self:${m.sender_role === "admin" ? "flex-end" : "flex-start"}; max-width:80%; padding:8px 12px; border-radius:8px; background:${m.sender_role === "admin" ? "var(--gold-dim)" : "var(--surface-2)"}; color:var(--ivory);">${m.body}</div>`
+      (m) => `<div style="align-self:${m.sender_role === "admin" ? "flex-end" : "flex-start"}; max-width:80%; padding:8px 12px; border-radius:8px; background:${m.sender_role === "admin" ? "var(--gold-dim)" : "var(--surface-2)"}; color:var(--ivory);">${esc(m.body)}</div>`
     )
     .join("");
   log.scrollTop = log.scrollHeight;
@@ -414,7 +446,7 @@ async function loadReservations() {
     .map(
       (r) => `
     <tr data-id="${r.id}">
-      <td>${r.vehicles ? r.vehicles.make + " " + r.vehicles.model : "–"}</td>
+      <td>${r.vehicles ? esc(r.vehicles.make + " " + r.vehicles.model) : "–"}</td>
       <td>£${r.amount_gbp}</td>
       <td><span class="badge badge-${r.status}">${r.status}</span></td>
       <td class="row-actions">${r.status === "pending" ? '<button data-mark-paid>Mark Paid</button>' : ""}</td>

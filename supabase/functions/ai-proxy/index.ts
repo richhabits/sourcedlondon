@@ -9,7 +9,7 @@
 //   supabase secrets set OPENROUTER_API_KEY=...  # https://openrouter.ai/keys — use their ":free" models (free, no card)
 //
 // Deploy with:
-//   supabase functions deploy ai-proxy --no-verify-jwt
+//   supabase functions deploy ai-proxy
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -113,24 +113,13 @@ Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS_HEADERS });
 
   try {
-    const { prompt, mode = "chat", history = [] } = await req.json();
-    if (!prompt || typeof prompt !== "string") {
-      return new Response(JSON.stringify({ error: "Missing 'prompt' string." }), {
-        status: 400,
-        headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
-      });
-    }
-    const system = SYSTEM_PROMPTS[mode] || SYSTEM_PROMPTS.chat;
-
-    const providers: Array<() => Promise<string>> = [];
+    // Checked first, before request-body validation, so a bare health-check ping
+    // (used by the admin Services tab) gets an accurate "not configured" response
+    // rather than a generic "missing prompt" one.
     const gemini = Deno.env.get("GEMINI_API_KEY");
     const groq = Deno.env.get("GROQ_API_KEY");
     const openrouter = Deno.env.get("OPENROUTER_API_KEY");
-    if (gemini) providers.push(() => callGemini(system, history, prompt, gemini));
-    if (groq) providers.push(() => callGroq(system, history, prompt, groq));
-    if (openrouter) providers.push(() => callOpenRouter(system, history, prompt, openrouter));
-
-    if (providers.length === 0) {
+    if (!gemini && !groq && !openrouter) {
       return new Response(
         JSON.stringify({
           error: "AI assistant not configured yet — set one of GEMINI_API_KEY, GROQ_API_KEY or OPENROUTER_API_KEY as a Supabase secret.",
@@ -138,6 +127,34 @@ Deno.serve(async (req: Request) => {
         { status: 503, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } }
       );
     }
+
+    const { prompt, mode = "chat", history = [] } = await req.json();
+    if (!prompt || typeof prompt !== "string") {
+      return new Response(JSON.stringify({ error: "Missing 'prompt' string." }), {
+        status: 400,
+        headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+      });
+    }
+    // Sanity caps — this endpoint is reachable by anyone with the public anon key,
+    // so bound the size of what we'll forward to a paid/rate-limited provider.
+    if (prompt.length > 2000) {
+      return new Response(JSON.stringify({ error: "Prompt too long (max 2000 characters)." }), {
+        status: 400,
+        headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+      });
+    }
+    if (!Array.isArray(history) || history.length > 20) {
+      return new Response(JSON.stringify({ error: "Invalid or oversized history." }), {
+        status: 400,
+        headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+      });
+    }
+    const system = SYSTEM_PROMPTS[mode] || SYSTEM_PROMPTS.chat;
+
+    const providers: Array<() => Promise<string>> = [];
+    if (gemini) providers.push(() => callGemini(system, history, prompt, gemini));
+    if (groq) providers.push(() => callGroq(system, history, prompt, groq));
+    if (openrouter) providers.push(() => callOpenRouter(system, history, prompt, openrouter));
 
     const order = shuffle(providers); // spreads load across whichever free tiers are configured
     const errors: string[] = [];

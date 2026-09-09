@@ -21,7 +21,7 @@
 //      supabase secrets set DVSA_MOT_SCOPE=...
 //
 // Deploy with:
-//   supabase functions deploy vehicle-lookup --no-verify-jwt
+//   supabase functions deploy vehicle-lookup
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -97,15 +97,9 @@ Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS_HEADERS });
 
   try {
-    const { registration } = await req.json();
-    const reg = (registration || "").toString().replace(/\s+/g, "").toUpperCase();
-    if (!reg) {
-      return new Response(JSON.stringify({ error: "Missing 'registration'." }), {
-        status: 400,
-        headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
-      });
-    }
-
+    // Checked first, before request-body validation, so a bare health-check ping
+    // (used by the admin Services tab) gets an accurate "not configured" response
+    // rather than a generic "invalid registration" one.
     const dvlaKey = Deno.env.get("DVLA_API_KEY");
     const motClientId = Deno.env.get("DVSA_MOT_CLIENT_ID");
     const motClientSecret = Deno.env.get("DVSA_MOT_CLIENT_SECRET");
@@ -118,6 +112,17 @@ Deno.serve(async (req: Request) => {
         }),
         { status: 503, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } }
       );
+    }
+
+    const { registration } = await req.json();
+    const reg = (registration || "").toString().replace(/\s+/g, "").toUpperCase();
+    // UK plates are at most 7 characters; reject anything else outright rather than
+    // forwarding junk to DVLA/DVSA (this endpoint is reachable with just the anon key).
+    if (!reg || !/^[A-Z0-9]{2,7}$/.test(reg)) {
+      return new Response(JSON.stringify({ error: "Enter a valid UK registration." }), {
+        status: 400,
+        headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+      });
     }
 
     const result: Record<string, unknown> = { registration: reg };

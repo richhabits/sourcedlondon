@@ -94,12 +94,29 @@ document.addEventListener("DOMContentLoaded", () => {
   if (makeField && params.get("make")) makeField.value = params.get("make");
   if (modelField && params.get("model")) modelField.value = params.get("model");
 
-  // ---- Enquiry form -> WhatsApp + mailto (no backend, no cost) ----
+  // ---- Enquiry form -> saved to the database (if connected) + WhatsApp/mailto ----
   const enquiryForm = document.getElementById("enquiry-form");
   if (enquiryForm) {
-    enquiryForm.addEventListener("submit", (e) => {
+    enquiryForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       const data = Object.fromEntries(new FormData(enquiryForm).entries());
+
+      const supabase = window.SourcedLondon?.getSupabase();
+      if (supabase) {
+        const { data: userData } = await supabase.auth.getUser();
+        await supabase.from("enquiries").insert({
+          lead_type: "purchase",
+          user_id: userData?.user?.id || null,
+          name: data.name || "",
+          email: data.email || "",
+          phone: data.phone || "",
+          make: data.make || "",
+          model: data.model || "",
+          budget: data.budget || "",
+          message: data.message || "",
+        });
+      }
+
       const lines = [
         `New Sourced London enquiry`,
         `Name: ${data.name || "-"}`,

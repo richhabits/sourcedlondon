@@ -71,6 +71,20 @@ async function callEdgeFunction(name, body) {
   return json;
 }
 
+// Escapes DB-sourced text before it's interpolated into innerHTML template strings.
+// This matters most for public-submittable content (enquiries, sell leads, messages,
+// customer links) rendered inside the admin panel — anyone can submit an enquiry
+// without logging in, so that data must never be trusted as safe HTML.
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (c) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  }[c]));
+}
+
 window.SourcedLondon = window.SourcedLondon || {};
 Object.assign(window.SourcedLondon, {
   getBackendConfig,
@@ -80,4 +94,5 @@ Object.assign(window.SourcedLondon, {
   getSupabase,
   functionUrl,
   callEdgeFunction,
+  escapeHtml,
 });

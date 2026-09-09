@@ -4,6 +4,7 @@
    ========================================================= */
 
 const $ = (sel) => document.querySelector(sel);
+const esc = (v) => window.SourcedLondon.escapeHtml(v);
 let supabase = null;
 let mode = "signin"; // or "signup"
 
@@ -91,7 +92,7 @@ async function loadMyEnquiries(userId, email) {
     .order("created_at", { ascending: false });
   $("#my-enquiries").innerHTML = (data || [])
     .map(
-      (e) => `<tr><td>${[e.make, e.model].filter(Boolean).join(" ") || "General enquiry"}</td><td><span class="badge badge-${e.status}">${e.status}</span></td><td>${new Date(e.created_at).toLocaleDateString()}</td></tr>`
+      (e) => `<tr><td>${esc([e.make, e.model].filter(Boolean).join(" ") || "General enquiry")}</td><td><span class="badge badge-${esc(e.status)}">${esc(e.status)}</span></td><td>${esc(new Date(e.created_at).toLocaleDateString())}</td></tr>`
     )
     .join("") || `<tr><td colspan="3" style="color:var(--muted);">No enquiries yet — visit the <a href="vehicles.html" class="text-link">Vehicles page</a> to start one.</td></tr>`;
 }
@@ -109,9 +110,9 @@ async function loadMySaved(userId) {
       const price = v.price_poa || !v.price_gbp ? "£ POA" : `£${Number(v.price_gbp).toLocaleString()}`;
       return `
       <div class="vehicle-card">
-        <div class="vehicle-media">${v.photos?.[0] ? `<img src="${v.photos[0]}" style="width:100%;height:100%;object-fit:cover;">` : "Photo to be added"}</div>
+        <div class="vehicle-media">${v.photos?.[0] ? `<img src="${esc(v.photos[0])}" style="width:100%;height:100%;object-fit:cover;">` : "Photo to be added"}</div>
         <div class="vehicle-body">
-          <span class="make">${v.make}</span><h3>${v.model}</h3>
+          <span class="make">${esc(v.make)}</span><h3>${esc(v.model)}</h3>
           <div class="vehicle-price">${price}</div>
           <div class="vehicle-actions">
             <button class="btn btn-primary" data-reserve="${v.id}" data-amount="${v.price_gbp ? Math.round(v.price_gbp * 0.05) : 500}">Reserve (test deposit)</button>
@@ -143,7 +144,7 @@ async function loadMyReservations(userId) {
   const { data } = await supabase.from("reservations").select("*, vehicles(make, model)").eq("user_id", userId).order("created_at", { ascending: false });
   $("#my-reservations").innerHTML = (data || [])
     .map(
-      (r) => `<tr><td>${r.vehicles ? r.vehicles.make + " " + r.vehicles.model : "–"}</td><td>£${r.amount_gbp}</td><td><span class="badge badge-${r.status}">${r.status}</span></td></tr>`
+      (r) => `<tr><td>${r.vehicles ? esc(r.vehicles.make + " " + r.vehicles.model) : "–"}</td><td>£${r.amount_gbp}</td><td><span class="badge badge-${esc(r.status)}">${esc(r.status)}</span></td></tr>`
     )
     .join("") || `<tr><td colspan="3" style="color:var(--muted);">No reservations yet.</td></tr>`;
 }
@@ -155,7 +156,7 @@ async function loadMyLinks(userId) {
   if (!body) return;
   body.innerHTML = (data || [])
     .map(
-      (l) => `<tr data-id="${l.id}"><td><a href="${l.url}" target="_blank" class="text-link">${l.url.slice(0, 50)}</a></td><td>${l.note || ""}</td><td class="row-actions"><button data-remove-link>Remove</button></td></tr>`
+      (l) => `<tr data-id="${esc(l.id)}"><td><a href="${esc(l.url)}" target="_blank" class="text-link">${esc(l.url.slice(0, 50))}</a></td><td>${esc(l.note || "")}</td><td class="row-actions"><button data-remove-link>Remove</button></td></tr>`
     )
     .join("") || `<tr><td colspan="3" style="color:var(--muted);">Nothing saved yet.</td></tr>`;
   body.querySelectorAll("[data-remove-link]").forEach((btn) => {
@@ -185,7 +186,7 @@ async function loadMyMessages(userId) {
   if (!log) return;
   log.innerHTML = (data || [])
     .map(
-      (m) => `<div style="align-self:${m.sender_role === "customer" ? "flex-end" : "flex-start"}; max-width:80%; padding:8px 12px; border-radius:8px; background:${m.sender_role === "customer" ? "var(--gold-dim)" : "var(--surface-2)"}; color:var(--ivory);">${m.body}</div>`
+      (m) => `<div style="align-self:${m.sender_role === "customer" ? "flex-end" : "flex-start"}; max-width:80%; padding:8px 12px; border-radius:8px; background:${m.sender_role === "customer" ? "var(--gold-dim)" : "var(--surface-2)"}; color:var(--ivory);">${esc(m.body)}</div>`
     )
     .join("") || `<p style="color:var(--muted);">No messages yet — say hello.</p>`;
   log.scrollTop = log.scrollHeight;

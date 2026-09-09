@@ -182,7 +182,11 @@ create policy "admin_users_self_read" on public.admin_users for select using (pu
 drop policy if exists "enquiries_insert_anyone" on public.enquiries;
 create policy "enquiries_insert_anyone" on public.enquiries for insert with check (true);
 drop policy if exists "enquiries_select_own_or_admin" on public.enquiries;
-create policy "enquiries_select_own_or_admin" on public.enquiries for select using (auth.uid() = user_id or public.is_admin());
+create policy "enquiries_select_own_or_admin" on public.enquiries for select using (
+  auth.uid() = user_id
+  or public.is_admin()
+  or email = (auth.jwt() ->> 'email')
+);
 drop policy if exists "enquiries_admin_update" on public.enquiries;
 create policy "enquiries_admin_update" on public.enquiries for update using (public.is_admin()) with check (public.is_admin());
 

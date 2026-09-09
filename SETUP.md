@@ -2,6 +2,8 @@
 
 This template ships with no backend of its own. Whoever runs a copy of it connects their **own** free accounts from inside the admin panel — nothing here is tied to the person who built or sold the template. Total time: ~15 minutes, £0 to start (test mode).
 
+Note: the three `supabase functions deploy` commands below deploy with JWT verification **on** (the default) — every request the site makes already carries a valid token (either the public anon key or a signed-in user's session), so this is free hardening with no functional cost. Don't add `--no-verify-jwt` unless you have a specific reason to.
+
 ## 1. Get the site online (optional if you're just testing locally)
 
 You can preview everything by opening `website/index.html` directly in a browser — no server needed. To actually go live:
@@ -40,7 +42,7 @@ Add a second admin (e.g. Ferrell) the same way once they've created their own ac
    supabase login
    supabase link --project-ref your-project-ref   # found in your Supabase project URL
    supabase secrets set STRIPE_SECRET_KEY=sk_test_...
-   supabase functions deploy stripe-checkout --no-verify-jwt
+   supabase functions deploy stripe-checkout
    ```
 5. Done. Customers can now click "Reserve (test deposit)" in their account dashboard and get a real Stripe Checkout page — using Stripe's test card `4242 4242 4242 4242`, any future date, any CVC. No real money moves until you swap in live (`sk_live_...`) keys, which does require Stripe business verification.
 
@@ -57,7 +59,7 @@ The `ai-proxy` function accepts up to three free-tier keys. Set **any one** and 
    supabase secrets set GEMINI_API_KEY=your-key-here
    supabase secrets set GROQ_API_KEY=your-key-here
    supabase secrets set OPENROUTER_API_KEY=your-key-here
-   supabase functions deploy ai-proxy --no-verify-jwt
+   supabase functions deploy ai-proxy
    ```
 3. Reload the site — a chat bubble appears for customers, and "✦ Draft with AI" buttons light up in the admin panel (vehicle descriptions, enquiry replies).
 
@@ -77,7 +79,7 @@ Used on `sell.html` (part-exchange leads) and in Admin → Vehicles ("Look Up Re
   ```
 Then deploy:
 ```bash
-supabase functions deploy vehicle-lookup --no-verify-jwt
+supabase functions deploy vehicle-lookup
 ```
 
 ## 7. Check everything's live
