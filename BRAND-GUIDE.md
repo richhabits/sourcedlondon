@@ -20,10 +20,10 @@ When you have a real logo file, drop it at `website/assets/img/logo.svg` and rep
 
 ## Typography
 
-- **Display / headings:** [Fraunces](https://fonts.google.com/specimen/Fraunces) — a soft, quiet-luxury serif. Loaded free from Google Fonts, no license cost.
-- **Body / UI:** [Inter](https://fonts.google.com/specimen/Inter) — clean, highly legible sans-serif.
+- **Display / headings:** [Bodoni Moda](https://fonts.google.com/specimen/Bodoni+Moda) — a high-contrast didone serif, the same family of typeface fashion and luxury houses use (Vogue-adjacent). Loaded free from Google Fonts, no license cost.
+- **Body / UI:** [Manrope](https://fonts.google.com/specimen/Manrope) — a clean geometric sans-serif for body copy and UI.
 
-This pairing was chosen deliberately to differentiate from escalux.co.uk, which uses a plain sans-serif throughout with no serif display type — the serif headline is doing a lot of the "expensive" feeling here.
+This pairing was chosen deliberately to differentiate from escalux.co.uk, which uses a plain sans-serif throughout with no serif display type — the dramatic high-contrast headline is doing a lot of the "expensive" feeling here. (Earlier draft used Fraunces/Inter — replaced after review for a bolder, more editorial luxury feel.)
 
 ## Color Palette
 

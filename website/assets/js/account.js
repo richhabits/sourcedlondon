@@ -74,6 +74,8 @@ async function showDashboard() {
   loadMyEnquiries(user.id, user.email);
   loadMySaved(user.id);
   loadMyReservations(user.id);
+  loadMyLinks(user.id);
+  loadMyMessages(user.id);
 }
 
 $("#dash-logout")?.addEventListener("click", async () => {
@@ -145,5 +147,59 @@ async function loadMyReservations(userId) {
     )
     .join("") || `<tr><td colspan="3" style="color:var(--muted);">No reservations yet.</td></tr>`;
 }
+
+/* ---------- Saved links ("seen elsewhere") ---------- */
+async function loadMyLinks(userId) {
+  const { data } = await supabase.from("customer_links").select("*").eq("user_id", userId).order("created_at", { ascending: false });
+  const body = $("#my-links");
+  if (!body) return;
+  body.innerHTML = (data || [])
+    .map(
+      (l) => `<tr data-id="${l.id}"><td><a href="${l.url}" target="_blank" style="color:var(--gold-bright);">${l.url.slice(0, 50)}</a></td><td>${l.note || ""}</td><td class="row-actions"><button data-remove-link>Remove</button></td></tr>`
+    )
+    .join("") || `<tr><td colspan="3" style="color:var(--muted);">Nothing saved yet.</td></tr>`;
+  body.querySelectorAll("[data-remove-link]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      await supabase.from("customer_links").delete().eq("id", btn.closest("tr").dataset.id);
+      loadMyLinks(userId);
+    });
+  });
+}
+
+document.getElementById("link-form")?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const { data: userData } = await supabase.auth.getUser();
+  const url = document.getElementById("link-url").value.trim();
+  const note = document.getElementById("link-note").value.trim();
+  if (!url) return;
+  await supabase.from("customer_links").insert({ user_id: userData.user.id, url, note });
+  document.getElementById("link-form").reset();
+  loadMyLinks(userData.user.id);
+});
+
+/* ---------- Messages (in-house chat with the brand) ---------- */
+async function loadMyMessages(userId) {
+  await supabase.from("messages").update({ read_by_customer: true }).eq("user_id", userId).eq("sender_role", "admin");
+  const { data } = await supabase.from("messages").select("*").eq("user_id", userId).order("created_at", { ascending: true });
+  const log = $("#my-message-log");
+  if (!log) return;
+  log.innerHTML = (data || [])
+    .map(
+      (m) => `<div style="align-self:${m.sender_role === "customer" ? "flex-end" : "flex-start"}; max-width:80%; padding:8px 12px; border-radius:8px; background:${m.sender_role === "customer" ? "var(--gold-dim)" : "var(--surface-2)"}; color:var(--ivory);">${m.body}</div>`
+    )
+    .join("") || `<p style="color:var(--muted);">No messages yet — say hello.</p>`;
+  log.scrollTop = log.scrollHeight;
+}
+
+document.getElementById("my-message-form")?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const { data: userData } = await supabase.auth.getUser();
+  const input = document.getElementById("my-message-input");
+  const body = input.value.trim();
+  if (!body) return;
+  await supabase.from("messages").insert({ user_id: userData.user.id, sender_role: "customer", body });
+  input.value = "";
+  loadMyMessages(userData.user.id);
+});
 
 document.addEventListener("DOMContentLoaded", boot);

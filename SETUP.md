@@ -28,7 +28,7 @@ That's it — the database is live and the admin panel can now log in.
    ```
 3. Now sign in at `admin.html` with that same email/password — you have full admin access: Vehicles, Testimonials, Enquiries, Reservations, Site Settings.
 
-Add a second admin (e.g. Dre) the same way once they've created their own account.
+Add a second admin (e.g. Ferrell) the same way once they've created their own account.
 
 ## 4. Turn on payments (Stripe, test mode — no business verification needed)
 
@@ -44,28 +44,62 @@ Add a second admin (e.g. Dre) the same way once they've created their own accoun
    ```
 5. Done. Customers can now click "Reserve (test deposit)" in their account dashboard and get a real Stripe Checkout page — using Stripe's test card `4242 4242 4242 4242`, any future date, any CVC. No real money moves until you swap in live (`sk_live_...`) keys, which does require Stripe business verification.
 
-## 5. Turn on the AI assistant (free tier, no card required)
+## 5. Turn on the AI assistant (free tier, no card required — and it self-rotates across providers)
 
-1. Get a free API key at [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey) (Google account, no billing needed for the free tier).
-2. From this project folder:
+The `ai-proxy` function accepts up to three free-tier keys. Set **any one** and it works; set more than one and it randomly spreads requests across whichever are configured, automatically retrying a different provider if one errors or is rate-limited — so you get more free runway before anything could ever cost money, and no single provider's limit takes the assistant down.
+
+1. Pick one or more:
+   - **Gemini** (recommended first pick): [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey) — Google account, no card.
+   - **Groq**: [console.groq.com/keys](https://console.groq.com/keys) — very fast free-tier Llama models, no card.
+   - **OpenRouter**: [openrouter.ai/keys](https://openrouter.ai/keys) — uses their `:free` model tier, no card.
+2. From this project folder, set whichever you got:
    ```bash
    supabase secrets set GEMINI_API_KEY=your-key-here
+   supabase secrets set GROQ_API_KEY=your-key-here
+   supabase secrets set OPENROUTER_API_KEY=your-key-here
    supabase functions deploy ai-proxy --no-verify-jwt
    ```
 3. Reload the site — a chat bubble appears for customers, and "✦ Draft with AI" buttons light up in the admin panel (vehicle descriptions, enquiry replies).
 
-## 6. Check everything's live
+## 6. Turn on the number-plate / MOT checker (free UK government APIs)
 
-Open `admin.html` → **Services** tab. It pings both Edge Functions and shows Connected / Not configured for Database, Payments, and AI in real time.
+Used on `sell.html` (part-exchange leads) and in Admin → Vehicles ("Look Up Reg"). Set either or both:
+
+- **DVLA Vehicle Enquiry Service** (tax status, colour, fuel type, basic MOT status): register free at [register-for-vehicle-enquiry-service.dvla.gov.uk](https://register-for-vehicle-enquiry-service.dvla.gov.uk)
+  ```bash
+  supabase secrets set DVLA_API_KEY=your-key-here
+  ```
+- **DVSA MOT History API** (full test history, advisories, mileage): register free at [documentation.history.mot.api.gov.uk](https://documentation.history.mot.api.gov.uk) — this one issues an Azure AD client ID/secret plus an API key; their signup flow walks you through it.
+  ```bash
+  supabase secrets set DVSA_MOT_CLIENT_ID=your-client-id
+  supabase secrets set DVSA_MOT_CLIENT_SECRET=your-client-secret
+  supabase secrets set DVSA_MOT_API_KEY=your-api-key
+  ```
+Then deploy:
+```bash
+supabase functions deploy vehicle-lookup --no-verify-jwt
+```
+
+## 7. Check everything's live
+
+Open `admin.html` → **Services** tab. It pings all three Edge Functions and shows Connected / Not configured for Database, Payments, AI, and Reg Lookup in real time.
 
 ## What's genuinely free at small scale, and what isn't
 
 | Service | Free tier covers | Starts costing when |
 |---|---|---|
-| Supabase | Database, Auth, 2 Edge Functions, this whole app | Real scale (thousands of users) or a 2nd project in the same org |
+| Supabase | Database, Auth, 3 Edge Functions, this whole app | Real scale (thousands of users) or a 2nd project in the same org |
 | Vercel / Netlify | Hosting a static site | Real scale / custom team features |
 | Stripe | Unlimited test mode | Never a monthly fee — live mode takes a per-transaction % only, once verified |
-| Google Gemini | Generous free-tier request limits | High-volume production use |
+| Gemini / Groq / OpenRouter | Generous free-tier request limits each, and the assistant rotates across whichever you set | High-volume production use across all configured providers at once |
+| DVLA VES / DVSA MOT History | Free, government-run, no card | Not a paid product — these don't have a paid tier to fall into |
+
+## Other things worth knowing
+
+- **"Sell Your Car" leads** land in the same Admin → Enquiries table as buyer enquiries, tagged **Selling** vs **Buying** — no separate inbox to check.
+- **In-house messaging** (Admin → Messages, and the Messages panel in a customer's own account) lets you and a signed-in customer talk without leaving the site — no email/WhatsApp round-trip required for quick back-and-forth.
+- **Customer-saved links**: signed-in customers can paste a link + note about a car they've seen elsewhere (Autotrader, etc.) from their account page — visible to admins under Enquiries → "Vehicles Customers Are Watching Elsewhere," useful sourcing context.
+- **Trust & Compliance fields** (Admin → Site Settings) for a Trustpilot URL, Google Reviews URL, FCA number, and BVRLA number each only appear on the public Reviews page once you've actually filled them in — never shown as an unverified claim.
 
 ## Re-selling this template to another client
 

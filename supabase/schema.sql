@@ -64,6 +64,31 @@ create table if not exists public.enquiries (
   created_at timestamptz not null default now()
 );
 
+-- Added for the "Sell / Part-Exchange Your Car" funnel and reg-plate lookups.
+alter table public.enquiries add column if not exists lead_type text not null default 'purchase' check (lead_type in ('purchase','sell'));
+alter table public.enquiries add column if not exists vehicle_reg text;
+alter table public.enquiries add column if not exists lookup_data jsonb;
+
+-- Customer-added links/notes about vehicles they've spotted elsewhere (Autotrader, etc.)
+create table if not exists public.customer_links (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  url text not null,
+  note text,
+  created_at timestamptz not null default now()
+);
+
+-- In-house messaging between the brand (admin) and a signed-in customer. One thread per customer.
+create table if not exists public.messages (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  sender_role text not null check (sender_role in ('customer','admin')),
+  body text not null,
+  read_by_admin boolean not null default false,
+  read_by_customer boolean not null default false,
+  created_at timestamptz not null default now()
+);
+
 create table if not exists public.saved_vehicles (
   user_id uuid references auth.users(id) on delete cascade,
   vehicle_id uuid references public.vehicles(id) on delete cascade,
@@ -124,6 +149,8 @@ alter table public.admin_users enable row level security;
 alter table public.enquiries enable row level security;
 alter table public.saved_vehicles enable row level security;
 alter table public.reservations enable row level security;
+alter table public.customer_links enable row level security;
+alter table public.messages enable row level security;
 
 -- Vehicles: anyone can view; only admins can change.
 drop policy if exists "vehicles_select_public" on public.vehicles;
@@ -170,6 +197,20 @@ create policy "reservations_select_own_or_admin" on public.reservations for sele
 drop policy if exists "reservations_admin_write" on public.reservations;
 create policy "reservations_admin_write" on public.reservations for all using (public.is_admin()) with check (public.is_admin());
 
+-- Customer links: owner manages their own; admins can view all (useful sourcing context).
+drop policy if exists "customer_links_owner" on public.customer_links;
+create policy "customer_links_owner" on public.customer_links for all using (auth.uid() = user_id or public.is_admin()) with check (auth.uid() = user_id);
+
+-- Messages: a customer sees/sends only their own thread; admins see and reply to all threads.
+drop policy if exists "messages_select" on public.messages;
+create policy "messages_select" on public.messages for select using (auth.uid() = user_id or public.is_admin());
+drop policy if exists "messages_insert" on public.messages;
+create policy "messages_insert" on public.messages for insert with check (
+  (auth.uid() = user_id and sender_role = 'customer') or (public.is_admin() and sender_role = 'admin')
+);
+drop policy if exists "messages_update_read" on public.messages;
+create policy "messages_update_read" on public.messages for update using (auth.uid() = user_id or public.is_admin()) with check (auth.uid() = user_id or public.is_admin());
+
 -- ---------- Starter content so the site isn't empty on first load ----------
 
 insert into public.site_settings (key, value) values
@@ -179,5 +220,9 @@ insert into public.site_settings (key, value) values
   ('phone_intl', ''),
   ('whatsapp_intl', ''),
   ('address', ''),
-  ('owner_names', 'Romeo & Dre')
+  ('owner_names', 'Dre & Ferrell'),
+  ('trustpilot_url', ''),
+  ('google_reviews_url', ''),
+  ('fca_number', ''),
+  ('bvrla_number', '')
 on conflict (key) do nothing;

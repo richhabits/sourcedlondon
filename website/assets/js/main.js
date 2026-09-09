@@ -6,11 +6,11 @@
 window.CLEARDRIVE_CONFIG = {
   brandName: "Cleardrive", // working name — swap when confirmed
   email: "enquiries@cleardrive.example", // TBC — replace with real inbox
-  phoneDisplay: "+44 00 0000 0000", // TBC — replace with the number Romeo mentioned
+  phoneDisplay: "+44 00 0000 0000", // TBC — replace with the number you'll use for the business
   phoneIntl: "440000000000", // digits only, no + or spaces, for tel: / wa.me links
   whatsappIntl: "440000000000", // joint business WhatsApp number, digits only
   address: "Address to be confirmed", // TBC
-  ownerNames: "Romeo & Dre",
+  ownerNames: "Dre & Ferrell",
 };
 
 document.addEventListener("DOMContentLoaded", () => {

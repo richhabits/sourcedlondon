@@ -39,6 +39,21 @@ async function applySiteSettings(supabase) {
     if (key === "mailto" && cfg.email) el.href = `mailto:${cfg.email}`;
     if (key === "whatsapp" && cfg.whatsappIntl) el.href = `https://wa.me/${cfg.whatsappIntl}`;
   });
+
+  // Trust & Compliance — each element only appears once an admin has actually filled it in.
+  const showIf = (elId, value, apply) => {
+    const el = document.getElementById(elId);
+    if (el && value) {
+      apply(el, value);
+      el.style.display = "";
+    }
+  };
+  showIf("compliance-trustpilot", map.trustpilot_url, (el, v) => (el.href = v));
+  showIf("compliance-google", map.google_reviews_url, (el, v) => (el.href = v));
+  showIf("compliance-fca", map.fca_number, (el) => {});
+  showIf("compliance-fca-num", map.fca_number, (el, v) => (el.textContent = v));
+  showIf("compliance-bvrla", map.bvrla_number, (el) => {});
+  showIf("compliance-bvrla-num", map.bvrla_number, (el, v) => (el.textContent = v));
 }
 
 function vehicleCardHTML(v) {

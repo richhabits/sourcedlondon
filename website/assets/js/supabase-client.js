@@ -1,7 +1,7 @@
 /* =========================================================
    Connection layer — reads the buyer's own Supabase project
    details (saved from the admin Setup tab) and exposes one
-   shared client. Nothing here is Romeo's infrastructure —
+   shared client. Nothing here is one shared, central infrastructure —
    every deployed copy of this site points at its OWN backend.
    ========================================================= */
 

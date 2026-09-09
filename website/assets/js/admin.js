@@ -35,6 +35,8 @@ async function boot() {
   loadVehicles();
   loadTestimonials();
   loadEnquiries();
+  loadCustomerLinks();
+  loadMessageThreads();
   loadReservations();
   loadSettings();
   checkServices();
@@ -282,8 +284,9 @@ async function loadEnquiries() {
     .map(
       (e) => `
     <tr data-id="${e.id}">
+      <td><span class="badge ${e.lead_type === "sell" ? "badge-pending" : "badge-won"}">${e.lead_type === "sell" ? "Selling" : "Buying"}</span></td>
       <td>${e.name}</td>
-      <td>${[e.make, e.model].filter(Boolean).join(" ") || "–"}</td>
+      <td>${[e.make, e.model].filter(Boolean).join(" ") || "–"}${e.vehicle_reg ? `<br><span style="color:var(--muted); font-size:0.75rem;">Reg: ${e.vehicle_reg}</span>` : ""}</td>
       <td>${e.email}<br><span style="color:var(--muted);">${e.phone || ""}</span></td>
       <td>
         <select data-status style="background:var(--bg-alt); color:var(--ivory); border:1px solid var(--border-strong); border-radius:4px; padding:4px 8px;">
@@ -315,6 +318,90 @@ async function loadEnquiries() {
     });
   });
 }
+
+/* ---------- Customer-saved links ("watching elsewhere") ---------- */
+async function loadCustomerLinks() {
+  const body = $("#customer-links-body");
+  if (!body) return;
+  const { data, error } = await supabase
+    .from("customer_links")
+    .select("*, profiles(full_name)")
+    .order("created_at", { ascending: false });
+  if (error) {
+    body.innerHTML = `<tr><td colspan="4" style="color:var(--muted);">Nothing yet.</td></tr>`;
+    return;
+  }
+  body.innerHTML = (data || [])
+    .map(
+      (l) => `
+    <tr>
+      <td>${l.profiles?.full_name || "Customer"}</td>
+      <td><a href="${l.url}" target="_blank" style="color:var(--gold-bright);">${l.url}</a></td>
+      <td>${l.note || ""}</td>
+      <td>${new Date(l.created_at).toLocaleDateString()}</td>
+    </tr>`
+    )
+    .join("") || `<tr><td colspan="4" style="color:var(--muted);">Nothing yet.</td></tr>`;
+}
+
+/* ---------- Messages (in-house chat with customers) ---------- */
+let activeThreadUserId = null;
+
+async function loadMessageThreads() {
+  const container = $("#message-threads");
+  if (!container) return;
+  const { data } = await supabase.from("messages").select("*").order("created_at", { ascending: false });
+  const byUser = new Map();
+  (data || []).forEach((m) => {
+    if (!byUser.has(m.user_id)) byUser.set(m.user_id, []);
+    byUser.get(m.user_id).push(m);
+  });
+
+  const { data: profiles } = await supabase.from("profiles").select("id, full_name");
+  const nameFor = (id) => profiles?.find((p) => p.id === id)?.full_name || id.slice(0, 8);
+
+  container.innerHTML = Array.from(byUser.entries())
+    .map(([userId, msgs]) => {
+      const last = msgs[0];
+      const unread = msgs.some((m) => m.sender_role === "customer" && !m.read_by_admin);
+      return `
+      <button class="admin-tab${userId === activeThreadUserId ? " active" : ""}" data-thread="${userId}" style="width:100%; text-align:left; border-left:2px solid ${unread ? "var(--gold)" : "transparent"};">
+        <strong>${nameFor(userId)}</strong>${unread ? " •" : ""}<br>
+        <span style="font-size:0.75rem; color:var(--muted);">${last.body.slice(0, 40)}</span>
+      </button>`;
+    })
+    .join("") || `<p style="padding:16px; color:var(--muted);">No conversations yet.</p>`;
+
+  container.querySelectorAll("[data-thread]").forEach((btn) => {
+    btn.addEventListener("click", () => openMessageThread(btn.dataset.thread));
+  });
+}
+
+async function openMessageThread(userId) {
+  activeThreadUserId = userId;
+  $("#message-thread-empty").hidden = true;
+  $("#message-thread-view").hidden = false;
+  await supabase.from("messages").update({ read_by_admin: true }).eq("user_id", userId).eq("sender_role", "customer");
+  const { data } = await supabase.from("messages").select("*").eq("user_id", userId).order("created_at", { ascending: true });
+  const log = $("#message-log");
+  log.innerHTML = (data || [])
+    .map(
+      (m) => `<div style="align-self:${m.sender_role === "admin" ? "flex-end" : "flex-start"}; max-width:80%; padding:8px 12px; border-radius:8px; background:${m.sender_role === "admin" ? "var(--gold-dim)" : "var(--surface-2)"}; color:var(--ivory);">${m.body}</div>`
+    )
+    .join("");
+  log.scrollTop = log.scrollHeight;
+  loadMessageThreads();
+}
+
+$("#message-reply-form")?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const input = $("#message-reply-input");
+  const body = input.value.trim();
+  if (!body || !activeThreadUserId) return;
+  await supabase.from("messages").insert({ user_id: activeThreadUserId, sender_role: "admin", body });
+  input.value = "";
+  openMessageThread(activeThreadUserId);
+});
 
 /* ---------- Reservations ---------- */
 async function loadReservations() {
@@ -356,7 +443,10 @@ async function loadSettings() {
 $("#settings-form")?.addEventListener("submit", async (e) => {
   e.preventDefault();
   const f = e.target;
-  const keys = ["brand_name", "owner_names", "email", "phone_display", "phone_intl", "whatsapp_intl", "address"];
+  const keys = [
+    "brand_name", "owner_names", "email", "phone_display", "phone_intl", "whatsapp_intl", "address",
+    "trustpilot_url", "google_reviews_url", "fca_number", "bvrla_number",
+  ];
   const rows = keys.map((k) => ({ key: k, value: f[k].value.trim() }));
   await supabase.from("site_settings").upsert(rows);
   const status = $("#settings-status");
@@ -364,10 +454,31 @@ $("#settings-form")?.addEventListener("submit", async (e) => {
   status.classList.add("visible", "ok");
 });
 
+/* ---------- Vehicle reg lookup (used from the Vehicle modal) ---------- */
+$("#vehicle-lookup-btn")?.addEventListener("click", async () => {
+  const reg = $("#vehicle-reg-input").value.trim();
+  const status = $("#vehicle-lookup-status");
+  if (!reg) {
+    status.textContent = "Enter a registration first.";
+    return;
+  }
+  status.textContent = "Checking…";
+  try {
+    const data = await window.Cleardrive.callEdgeFunction("vehicle-lookup", { registration: reg });
+    const f = $("#vehicle-form");
+    if (data.make) f.make.value = data.make;
+    if (data.yearOfManufacture) f.year.value = data.yearOfManufacture;
+    const bits = [data.colour, data.fuelType, data.motStatus ? `MOT: ${data.motStatus}` : null, data.taxStatus ? `Tax: ${data.taxStatus}` : null].filter(Boolean);
+    status.textContent = bits.length ? bits.join(" · ") : "No details found.";
+  } catch (err) {
+    status.textContent = "Reg lookup isn't connected yet — see the Services tab.";
+  }
+});
+
 /* ---------- Services status ---------- */
 async function checkServices() {
   const cfg = window.Cleardrive.getBackendConfig();
-  for (const [fn, elId] of [["ai-proxy", "service-ai"], ["stripe-checkout", "service-stripe"]]) {
+  for (const [fn, elId] of [["ai-proxy", "service-ai"], ["stripe-checkout", "service-stripe"], ["vehicle-lookup", "service-lookup"]]) {
     const el = $(`#${elId}`);
     try {
       const res = await fetch(window.Cleardrive.functionUrl(fn), {
