@@ -6,7 +6,7 @@ Real, properly-licensed photos and marks used across the site — no AI-generate
 
 | File | Source | Photographer | License |
 |---|---|---|---|
-| `website/assets/img/photos/hero-night-sedan.jpg` | [Unsplash](https://unsplash.com/photos/black-luxury-sedan-parked-on-a-wet-street-at-night-9xhwtVIM0dE) | Ilya Godze ([@godze](https://unsplash.com/@godze)) | [Unsplash License](https://unsplash.com/license) — free for commercial use, no attribution required (credited here anyway) |
+| `website/assets/img/photos/hero-night-sedan.webp` | [Unsplash](https://unsplash.com/photos/black-luxury-sedan-parked-on-a-wet-street-at-night-9xhwtVIM0dE) | Ilya Godze ([@godze](https://unsplash.com/@godze)) | [Unsplash License](https://unsplash.com/license) — free for commercial use, no attribution required (credited here anyway) |
 
 ## Marque logos
 
