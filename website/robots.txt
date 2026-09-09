@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /account.html
+
+Sitemap: https://www.sourcedlondon.example/sitemap.xml

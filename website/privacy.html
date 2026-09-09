@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy — Sourced London</title>
+<meta name="description" content="How Sourced London collects, uses, and protects your personal data.">
+<meta name="robots" content="index, follow">
+<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+<script>
+(function(){
+  try {
+    if (localStorage.getItem('sourcedlondon_backend_config')) {
+      document.write('<scr' + 'ipt src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></scr' + 'ipt>');
+    }
+  } catch (e) {}
+})();
+</script>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Manrope:wght@400;500;600;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+  .legal{ max-width:760px; }
+  .legal h2{ font-size:1.4rem; margin-top:var(--space-6); }
+  .legal h3{ font-size:1.05rem; margin-top:var(--space-4); font-family:var(--font-body); font-weight:700; }
+  .legal ul{ color:var(--ivory-dim); padding-left:1.2em; }
+  .legal li{ margin-bottom:8px; }
+  .legal table{ width:100%; border-collapse:collapse; margin:var(--space-3) 0; }
+  .legal th, .legal td{ text-align:left; padding:8px 12px; border-bottom:1px solid var(--border); font-size:0.9rem; color:var(--ivory-dim); }
+  .legal th{ color:var(--gold); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav">
+    <a href="index.html" class="logo">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 1.5L21.5 12L12 22.5L2.5 12L12 1.5Z" fill="#C9A860"/><path d="M12 1.5L21.5 12L12 12L12 1.5Z" fill="#E4C888"/></svg>
+      <span class="logo-word" data-cfg="brandName">Sourced London</span>
+    </a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="vehicles.html">Vehicles</a>
+      <a href="sell.html">Sell Your Car</a>
+      <a href="about.html">About Us</a>
+      <a href="reviews.html">Reviews</a>
+      <a href="contact.html">Contact</a>
+      <a href="account.html">Account</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="contact.html" class="btn btn-primary">Enquire</a>
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    </div>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="container">
+    <span class="eyebrow">Legal</span>
+    <h1>Privacy Policy</h1>
+    <p class="lede">Last updated: <span class="tbc">[date to be confirmed on launch]</span>. This describes exactly what this site collects and why — nothing generic, nothing copy-pasted from elsewhere.</p>
+  </div>
+</section>
+
+<section>
+  <div class="container legal">
+    <p><strong data-cfg="brandName">Sourced London</strong> ("we", "us") is run by <span data-cfg="ownerNames">Dre &amp; Ferrell</span>. Registered business details: <span class="tbc">[legal entity name, company number, ICO registration number — TBC before launch]</span>.</p>
+
+    <h2>What we collect, and why</h2>
+    <table>
+      <tr><th>When you...</th><th>We collect</th><th>Why</th></tr>
+      <tr><td>Submit an enquiry (Contact, Sell Your Car, or App waitlist)</td><td>Name, email, phone, and whatever you tell us about the vehicle</td><td>To respond to your enquiry — by WhatsApp, email, or both</td></tr>
+      <tr><td>Create an account</td><td>Email, password (never visible to us — handled by our database provider, Supabase), and any name you give us</td><td>To let you track enquiries, save vehicles, and message us directly</td></tr>
+      <tr><td>Message us via your account</td><td>The message content</td><td>To have a conversation with you about your enquiry</td></tr>
+      <tr><td>Enter a vehicle registration (Sell Your Car)</td><td>The registration number</td><td>Sent to DVLA/DVSA (UK government services) to check tax and MOT status — not shared anywhere else</td></tr>
+      <tr><td>Reserve a vehicle with a deposit</td><td>Nothing card-related touches us directly</td><td>Payment is handled entirely by Stripe, our payment processor — we never see or store your card details</td></tr>
+      <tr><td>Use the chat assistant</td><td>Whatever you type into it</td><td>Sent to a third-party AI provider (one of Google Gemini, Groq, or OpenRouter) to generate a reply — not used to train those providers' models beyond their own standard API terms</td></tr>
+    </table>
+
+    <h2>What we don't do</h2>
+    <ul>
+      <li>We don't run analytics or advertising trackers on this site — no Google Analytics, no ad pixels, no cross-site tracking.</li>
+      <li>We don't sell or share your data with third parties for marketing purposes.</li>
+      <li>We don't store your payment card details — Stripe does, under its own PCI-compliant security standards.</li>
+    </ul>
+
+    <h2>Where your data is stored</h2>
+    <p>Enquiry, account, and message data is stored in our database, hosted by Supabase (a data infrastructure provider). Data submitted only via WhatsApp or email — if you enquire without creating an account — lives in those platforms under their own privacy terms, not ours.</p>
+
+    <h2>Cookies and local storage</h2>
+    <p>This site does not use tracking cookies. It uses your browser's local storage for one technical purpose only: remembering the connection details for our own backend so the site functions — this contains no personal data and is not shared with anyone.</p>
+    <p>This site loads fonts from Google Fonts (fonts.googleapis.com), which involves a request to Google's servers when the page loads.</p>
+
+    <h2>Your rights</h2>
+    <p>Under UK GDPR, you can ask us to access, correct, or delete the personal data we hold about you at any time. Contact us via the details on our <a href="contact.html" class="text-link">Contact page</a> to do so. You can also complain to the <a href="https://ico.org.uk" target="_blank" class="text-link">Information Commissioner's Office (ICO)</a> if you believe we've mishandled your data.</p>
+
+    <h2>Changes to this policy</h2>
+    <p>If how we handle data changes, we'll update this page. Check back periodically.</p>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© <span data-year></span> <span data-cfg="brandName">Sourced London</span>. All rights reserved.</span>
+      <span><a href="terms.html" class="text-link">Terms</a> · <a href="privacy.html" class="text-link">Privacy</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/supabase-client.js" defer></script>
+<script src="assets/js/data.js" defer></script>
+<script src="assets/js/main.js" defer></script>
+</body>
+</html>
